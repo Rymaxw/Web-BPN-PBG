@@ -50,11 +50,9 @@ const ArsipDigital = () => {
   // Filtering logic
   const filteredDocuments = documents.filter(doc => {
     // Time filter
-    if (timeFilter !== 'Semua Waktu') {
-      const docTime = new Date(doc.createdAt).getTime();
-      const now = new Date().getTime();
-      if (timeFilter === '7 Hari Terakhir' && (now - docTime) > 7 * 24 * 60 * 60 * 1000) return false;
-      if (timeFilter === 'Bulan Ini' && (now - docTime) > 30 * 24 * 60 * 60 * 1000) return false;
+    if (selectedDate) {
+      const docDateStr = new Date(doc.createdAt).toISOString().split('T')[0];
+      if (docDateStr !== selectedDate) return false;
     }
 
     // Status Filter

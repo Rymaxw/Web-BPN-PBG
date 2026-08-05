@@ -61,7 +61,7 @@ const Dashboard = () => {
   const [showJadwalModal, setShowJadwalModal] = useState(false);
   const [editingJadwal, setEditingJadwal] = useState({ id: 0, date: '', location: '', detail: '' });
 
-  const [uploadData, setUploadData] = useState({ noBerkas: '', judul: '', lokasi: '', keamanan: 'internal' });
+  const [uploadData, setUploadData] = useState({ noBerkas: '', judul: '', lokasi: '', keamanan: 'internal', klasifikasi: 'Sengketa Batas Lahan' });
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -134,7 +134,7 @@ const Dashboard = () => {
 
       if (res.ok) {
         setShowUploadModal(false);
-        setUploadData({ noBerkas: '', judul: '', lokasi: '', keamanan: 'internal' });
+        setUploadData({ noBerkas: '', judul: '', lokasi: '', keamanan: 'internal', klasifikasi: 'Sengketa Batas Lahan' });
         setSelectedFile(null);
         fetchData();
       } else {
