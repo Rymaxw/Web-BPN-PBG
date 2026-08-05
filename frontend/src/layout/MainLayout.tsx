@@ -18,7 +18,7 @@ const MainLayout = () => {
         <div className="print:hidden">
           <Header onMenuClick={() => setIsMobileMenuOpen(true)} />
         </div>
-        <main className="p-4 md:p-8 space-y-6 print:p-0 print:space-y-0 print:block w-full overflow-hidden">
+        <main className="p-4 md:p-8 space-y-6 print:p-0 print:space-y-0 print:block w-full">
           <Outlet />
         </main>
       </div>
