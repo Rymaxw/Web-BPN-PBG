@@ -1,118 +1,94 @@
-# Sistem Manajemen Sengketa & Perkara (ATR/BPN)
+# Web BPN - Sistem Manajemen Sengketa & Perkara
 
-Aplikasi web modern untuk mengelola, menganalisis, dan mengarsipkan dokumen terkait Sengketa dan Perkara pertanahan di lingkungan Kementerian ATR/BPN (khususnya percontohan Kantor Pertanahan Kab. Purbalingga).
+Sistem informasi berbasis web untuk digitalisasi, pengelolaan, dan pengarsipan dokumen terkait Sengketa dan Perkara di lingkungan Kementerian ATR/BPN. Sistem ini memfasilitasi pemisahan alur kerja sengketa dan perkara dalam satu platform terpusat.
 
-Sistem ini dirancang agar pencarian dokumen lebih cepat, alur kerja lebih rapi, dan meminimalisir risiko kehilangan berkas fisik.
+## Fitur Utama
 
----
+- **Dashboard Terintegrasi:** Menampilkan metrik utama, grafik tren dokumen, dan ringkasan jadwal sidang.
+- **Arsip Digital:** Penyimpanan dokumen terpusat dengan kemampuan pencarian dan penyaringan data secara real-time.
+- **Role-Based Access Control (RBAC):** Pemisahan hak akses antara `Admin` (pengelola sistem & pengguna) dan `Staff` (pengelola dokumen).
+- **Ekspor Data:** Fitur pembuatan laporan antrean dalam format spreadsheet.
+- **UI/UX Modern:** Antarmuka responsif yang dibangun menggunakan komponen modern berbasis Tailwind CSS.
 
-## 🎯 Tujuan & Fungsi Utama
-- **Digitalisasi Berkas:** Mengubah tumpukan map fisik menjadi arsip digital yang rapi dan mudah dicari kapan saja.
-- **Manajemen Terpusat:** Memisahkan alur kerja antara **Sengketa** dan **Perkara** dalam satu pintu (dashboard).
-- **Pemantauan Status:** Memantau berkas mana yang sedang diproses, sudah selesai, atau bermasalah (error).
-- **Keamanan Data:** Membatasi hak akses antara pegawai biasa (Staff) dan administrator (Admin).
+## Tech Stack
 
----
-
-## ✨ Fitur Unggulan
-1. **Dashboard Cerdas:** Menampilkan statistik total perkara/sengketa, jadwal sidang terdekat, dan grafik tren masuknya dokumen.
-2. **Arsip Digital:** Ruang penyimpanan dokumen PDF/Word/JPG dengan fitur pencarian cepat dan penyaringan (filter) berdasarkan tanggal/status.
-3. **Role-Based Access Control (RBAC):**
-   - **Admin:** Bisa mengakses semua fitur, termasuk menu *Manajemen Pengguna* untuk mengubah jabatan akun lain.
-   - **Staff:** Bisa mengelola dokumen, namun tidak bisa mengakses pengaturan sensitif (Manajemen Pengguna disembunyikan).
-4. **Analisis AI (Simulasi):** Antarmuka yang menampilkan hasil ekstraksi data dari dokumen legal secara otomatis.
-5. **Ekspor Laporan:** Mengunduh data antrean berkas dalam format Excel/PDF.
+- **Frontend:** React, TypeScript, Vite, Tailwind CSS, React Router.
+- **Backend:** Node.js, Express.js.
+- **Database:** PostgreSQL (Supabase), Prisma ORM.
+- **Security:** JWT (JSON Web Tokens), bcryptjs.
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
-Aplikasi ini dibangun menggunakan arsitektur *Client-Server* (Frontend & Backend terpisah).
+## Petunjuk Instalasi (Local Development)
 
-**Frontend (Antarmuka Pengguna):**
-- [React.js](https://react.dev/) + TypeScript
-- [Vite](https://vitejs.dev/) (Build tool super cepat)
-- [Tailwind CSS](https://tailwindcss.com/) (Styling UI)
-- React Router DOM (Navigasi halaman)
+Berikut adalah langkah-langkah untuk menjalankan aplikasi ini di environment lokal.
 
-**Backend (Server & Database):**
-- [Node.js](https://nodejs.org/) & [Express.js](https://expressjs.com/) (API Server)
-- [Prisma ORM](https://www.prisma.io/) (Manajemen Database)
-- [Supabase / PostgreSQL](https://supabase.com/) (Database Cloud)
-- JWT & bcryptjs (Keamanan dan Autentikasi)
+### Persyaratan Sistem
+- Node.js (v18 atau lebih baru)
+- npm atau pnpm
+- Git
 
----
+### 1. Kloning Repositori
 
-## 🚀 Panduan Menjalankan di Komputer Lokal (Local Setup)
-
-Buat kamu (atau teman tim) yang mau *pull* repo ini dan menjalankannya di laptop sendiri, ikuti langkah-langkah wajib di bawah ini:
-
-### Persyaratan Sistem (Prerequisites)
-Pastikan laptop kamu sudah ter-install:
-- **Node.js** (versi 18 atau terbaru)
-- **Git**
-
-### 1. Kloning Repository
-Buka terminal/CMD dan jalankan:
 ```bash
-git clone <url-repo-github-ini>
-cd Web-BPN
+git clone https://github.com/Rymaxw/Web-BPN-PBG.git
+cd Web-BPN-PBG
 ```
 
-### 2. Setup Backend (Server)
-Buka terminal baru, lalu masuk ke folder backend:
+### 2. Konfigurasi Backend
+
+Masuk ke direktori backend dan instal dependensi:
+
 ```bash
 cd backend
 npm install
 ```
 
-**Konfigurasi Database:**
-Buat file bernama `.env` di dalam folder `backend/`, lalu isi dengan *Connection String* Supabase kita:
+Buat file `.env` di dalam direktori `backend/` dan sesuaikan nilainya dengan kredensial database Supabase Anda:
+
 ```env
-DATABASE_URL="postgresql://postgres.[ID_SUPABASE]:[PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
-DIRECT_URL="postgresql://postgres.[ID_SUPABASE]:[PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres"
+DATABASE_URL="postgresql://postgres.[ID]:[PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
+DIRECT_URL="postgresql://postgres.[ID]:[PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres"
 PORT=3000
 ```
-*(Minta kredensial asli ke pembuat repository jika kamu belum punya).*
 
-**Sinkronisasi Prisma:**
-Jalankan perintah ini agar Prisma terhubung ke database:
+Sinkronisasi skema database dengan Prisma dan jalankan server:
+
 ```bash
 npx prisma generate
-```
-
-**Jalankan Server Backend:**
-```bash
+npx prisma db push
 npm run dev
 ```
-*Backend akan berjalan di `http://localhost:3000`.*
+*Server backend akan berjalan di port 3000.*
 
-### 3. Setup Frontend (Tampilan Web)
-Buka terminal baru lagi (biarkan terminal backend tetap jalan), lalu masuk ke folder frontend:
+### 3. Konfigurasi Frontend
+
+Buka terminal/tab baru, masuk ke direktori frontend dan instal dependensi:
+
 ```bash
-cd frontend
+cd ../frontend
 npm install
 ```
 
-**Konfigurasi API:**
-Buat file bernama `.env` di dalam folder `frontend/` dan isi dengan:
+Buat file `.env` di dalam direktori `frontend/`:
+
 ```env
 VITE_API_URL=http://localhost:3000/api
 ```
 
-**Jalankan Server Frontend:**
+Jalankan server *development* frontend:
+
 ```bash
 npm run dev
 ```
-*Web akan terbuka otomatis di browser pada alamat `http://localhost:5173`.*
+*Aplikasi web dapat diakses melalui http://localhost:5173.*
 
 ---
 
-## 👥 Cara Login (Akun Bawaan)
-Jika database belum di-reset, kamu bisa menggunakan akun admin bawaan berikut untuk mencoba aplikasi:
-- **Email:** admin@bpn.go.id
-- **Password:** admin123
+## Autentikasi Bawaan (Default Credentials)
 
-Atau, kamu bisa langsung klik tulisan **"Daftar di sini"** di halaman Login untuk membuat akun *Staff* kamu sendiri secara instan!
+Untuk keperluan pengujian, sistem menyediakan satu akun Administrator bawaan:
+- **Email:** `admin@bpn.go.id`
+- **Password:** `admin123`
 
----
-*Dibuat untuk memudahkan pelayanan dan birokrasi pertanahan di Indonesia.* 🇮🇩
+Untuk menambahkan pengguna baru, gunakan fitur registrasi pada halaman Login. Akun yang baru terdaftar akan otomatis memiliki role `staff` dan dapat dinaikkan menjadi `admin` melalui menu Pengaturan.
