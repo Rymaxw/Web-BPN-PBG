@@ -22,10 +22,12 @@ __pycache__/
 venv/
 extract_pdf.py
 requirements.txt
+/index.html
 
 # Assets / Large files
 "WEB BPN.pdf"
 *.pdf
+*.md
 
 # OS and Editor files
 .DS_Store
