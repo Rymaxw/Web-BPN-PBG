@@ -405,10 +405,14 @@ const Dashboard = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-2 relative">
-          <button type="button" className="bg-white border border-gray-300 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center space-x-2 text-gray-700 hover:bg-gray-50 transition shadow-sm cursor-pointer">
-            <i className="fa-regular fa-calendar"></i>
-            <span>Kalender</span>
-          </button>
+          <div className="relative">
+            <input 
+              type="date" 
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className="bg-white border border-gray-300 text-xs font-semibold px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-50 transition shadow-sm cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#190c4d]"
+            />
+          </div>
 
           <button onClick={() => setShowUploadModal(true)} type="button" className="bg-[#190c4d] text-white text-xs font-semibold px-4 py-1.5 rounded-lg flex items-center space-x-2 hover:bg-indigo-950 transition shadow-sm cursor-pointer">
             <i className="fa-solid fa-plus"></i>
