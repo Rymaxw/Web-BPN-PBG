@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
 import documentRoutes from './routes/documents';
 import usersRoutes from './routes/users';
+import path from 'path';
 
 dotenv.config();
 
@@ -12,7 +13,6 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-import path from 'path';
 
 // Serve uploaded files statically
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
