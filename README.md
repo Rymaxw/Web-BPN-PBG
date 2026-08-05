@@ -83,12 +83,4 @@ npm run dev
 ```
 *Aplikasi web dapat diakses melalui http://localhost:5173.*
 
----
 
-## Autentikasi Bawaan (Default Credentials)
-
-Untuk keperluan pengujian, sistem menyediakan satu akun Administrator bawaan:
-- **Email:** `admin@bpn.go.id`
-- **Password:** `admin123`
-
-Untuk menambahkan pengguna baru, gunakan fitur registrasi pada halaman Login. Akun yang baru terdaftar akan otomatis memiliki role `staff` dan dapat dinaikkan menjadi `admin` melalui menu Pengaturan.
