@@ -111,7 +111,7 @@ const Dashboard = () => {
 
   const handleUpload = async () => {
     if (!uploadData.noBerkas || !uploadData.judul || !uploadData.lokasi) {
-      alert('Harap isi No Berkas, Judul, dan Lokasi.');
+      alert('Harap isi Nomor Berkas, Nama Pemohon, dan NIK/NIB.');
       return;
     }
 
@@ -678,7 +678,13 @@ const Dashboard = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[11px] font-bold text-gray-800 mb-1">Nomor Berkas</label>
-                      <input type="text" placeholder="Contoh : B-2025-IX-0000" className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]" />
+                      <input 
+                        type="text" 
+                        placeholder="Contoh : B-2025-IX-0000" 
+                        value={uploadData.noBerkas} 
+                        onChange={(e) => setUploadData({...uploadData, noBerkas: e.target.value})} 
+                        className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]" 
+                      />
                     </div>
                     <div>
                       <label className="block text-[11px] font-bold text-gray-800 mb-1">Modul</label>
@@ -695,21 +701,37 @@ const Dashboard = () => {
                   <h4 className="text-[10px] font-bold text-[#190c4d] uppercase tracking-wider">INFORMASI PEMOHON</h4>
                   <div>
                     <label className="block text-[11px] font-bold text-gray-800 mb-1">Nama Pemohon/Institusi</label>
-                    <input type="text" placeholder="Masukkan Nama Lengkap" className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]" />
+                    <input 
+                      type="text" 
+                      placeholder="Masukkan Nama Lengkap" 
+                      value={uploadData.judul} 
+                      onChange={(e) => setUploadData({...uploadData, judul: e.target.value})} 
+                      className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]" 
+                    />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[11px] font-bold text-gray-800 mb-1">NIK/NIB</label>
-                      <input type="text" placeholder="16 digit angka" className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]" />
+                      <input 
+                        type="text" 
+                        placeholder="16 digit angka" 
+                        value={uploadData.lokasi} 
+                        onChange={(e) => setUploadData({...uploadData, lokasi: e.target.value})} 
+                        className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]" 
+                      />
                     </div>
                     <div>
                       <label className="block text-[11px] font-bold text-gray-800 mb-1">Subjek Sengketa</label>
                       <div className="relative">
-                        <select className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d] appearance-none cursor-pointer">
-                          <option>Sengketa Batas Lahan</option>
-                          <option>Sengketa Waris Tanah</option>
-                          <option>Sertifikat Ganda</option>
-                          <option>Sengketa Kepemilikan Hak</option>
+                        <select 
+                          value={uploadData.klasifikasi || 'Sengketa Batas Lahan'} 
+                          onChange={(e) => setUploadData({...uploadData, klasifikasi: e.target.value})} 
+                          className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d] appearance-none cursor-pointer"
+                        >
+                          <option value="Sengketa Batas Lahan">Sengketa Batas Lahan</option>
+                          <option value="Sengketa Waris Tanah">Sengketa Waris Tanah</option>
+                          <option value="Sertifikat Ganda">Sertifikat Ganda</option>
+                          <option value="Sengketa Kepemilikan Hak">Sengketa Kepemilikan Hak</option>
                         </select>
                         <i className="fa-solid fa-chevron-down absolute right-3 top-2.5 text-gray-400 text-[10px] pointer-events-none"></i>
                       </div>

@@ -94,4 +94,16 @@ router.get('/export', async (req: Request, res: Response) => {
   }
 });
 
+// DELETE /api/documents/:id - Hapus dokumen
+router.delete('/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    await prisma.document.delete({ where: { id } });
+    res.status(200).json({ message: 'Dokumen berhasil dihapus' });
+  } catch (error) {
+    console.error('Delete error:', error);
+    res.status(500).json({ error: 'Gagal menghapus dokumen' });
+  }
+});
+
 export default router;

@@ -21,6 +21,8 @@ const AnalisisDokumen = () => {
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
   const [exportFormat, setExportFormat] = useState('word');
+  const [filterStatus, setFilterStatus] = useState('');
+  const [filterKlasifikasi, setFilterKlasifikasi] = useState('');
   
   const [teksPerkara, setTeksPerkara] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -39,15 +41,23 @@ const AnalisisDokumen = () => {
       .catch(() => { setDocuments([]); });
   }, []);
 
-  const handleProsesAnalisis = () => {
+  const filteredDocuments = documents.filter(doc => {
+    let match = true;
+    if (filterStatus && doc.status !== filterStatus) match = false;
+    if (filterKlasifikasi && doc.klasifikasi !== filterKlasifikasi) match = false;
+    return match;
+  });
+
+  const handleProsesAnalisis = async () => {
     if (!teksPerkara && !selectedFilePerkara) {
       alert('Masukkan Teks Perkara atau Unggah Dokumen terlebih dahulu.');
       return;
     }
     setIsProcessing(true);
-    setTimeout(() => {
-      const newDoc: DocItem = {
-        id: Date.now().toString(),
+    
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const payload = {
         noBerkas: `PRK/2026/AN-${Math.floor(Math.random() * 1000)}`,
         judul: selectedFilePerkara ? selectedFilePerkara.name : 'Analisis Teks Manual',
         lokasi: '-',
@@ -55,15 +65,45 @@ const AnalisisDokumen = () => {
         status: 'selesai',
         klasifikasi: 'rahasia',
         keamanan: 'internal',
-        author: { name: 'User' },
-        createdAt: new Date().toISOString(),
+        authorId: user.id || 1
       };
-      setDocuments([newDoc, ...documents]);
-      setTeksPerkara('');
-      setSelectedFilePerkara(null);
+
+      const res = await fetch(`${API_URL}/documents`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        setTeksPerkara('');
+        setSelectedFilePerkara(null);
+        alert('Analisis Teks Berhasil diproses!');
+        // Refetch documents
+        const getRes = await fetch(`${API_URL}/documents?tipe=${modul}`);
+        const data = await getRes.json();
+        if (Array.isArray(data)) setDocuments(data);
+      } else {
+        alert('Gagal menyimpan hasil analisis.');
+      }
+    } catch (error) {
+      alert('Terjadi kesalahan koneksi.');
+    } finally {
       setIsProcessing(false);
-      alert('Analisis Teks Berhasil diproses!');
-    }, 1500);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Hapus hasil analisis ini?')) return;
+    try {
+      const res = await fetch(`${API_URL}/documents/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setDocuments(documents.filter(d => d.id !== id));
+      } else {
+        alert('Gagal menghapus data.');
+      }
+    } catch (error) {
+      alert('Terjadi kesalahan koneksi.');
+    }
   };
 
   const isPerkara = modul === 'perkara';
@@ -101,19 +141,10 @@ const AnalisisDokumen = () => {
         <div className="flex flex-col md:flex-row justify-between md:items-center items-start gap-4">
           <h3 className="font-bold text-sm text-gray-900">Daftar Dokumen Sedang Dianalisis</h3>
           <div className="flex items-center space-x-2 w-full md:w-auto">
-            <button onClick={() => alert('Filter model AI dalam tahap pengembangan lanjutan.')} className="flex-1 md:flex-none p-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition text-gray-800 cursor-pointer text-center">
+            <button onClick={() => setShowFilterModal(true)} className="flex-1 md:flex-none p-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition text-gray-800 cursor-pointer text-center">
               <i className="fa-solid fa-sliders text-sm"></i>
             </button>
-            <button onClick={() => {
-              const csvContent = "data:text/csv;charset=utf-8,ID,NO PENGADUAN,STATUS\n" + documents.map(d => `${d.id},${d.noBerkas},${d.status}`).join('\n');
-              const encodedUri = encodeURI(csvContent);
-              const link = document.createElement("a");
-              link.setAttribute("href", encodedUri);
-              link.setAttribute("download", "laporan_analisis_ai.csv");
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-            }} className="p-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition text-gray-800 cursor-pointer" title="Unduh CSV">
+            <button onClick={() => setShowExportModal(true)} className="p-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition text-gray-800 cursor-pointer" title="Unduh CSV/PDF">
               <i className="fa-solid fa-download text-sm"></i>
             </button>
           </div>
@@ -132,9 +163,9 @@ const AnalisisDokumen = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 font-medium">
-              {documents.length === 0 ? (
+              {filteredDocuments.length === 0 ? (
                 <tr><td colSpan={6} className="py-4 px-4 text-center text-gray-500">Tidak ada dokumen.</td></tr>
-              ) : documents.map((doc, idx) => {
+              ) : filteredDocuments.map((doc, idx) => {
                 const isCompleted = doc.status === 'selesai';
                 const isError = doc.status === 'error';
                 const progress = isCompleted ? 100 : (isError ? 25 : 65);
@@ -262,13 +293,13 @@ const AnalisisDokumen = () => {
                 <th className="py-4 px-6">NOMOR PERKARA</th>
                 <th className="py-4 px-6">PIHAK BERPERKARA</th>
                 <th className="py-4 px-6">TANGGAL ANALISIS</th>
-                <th className="py-4 px-6 text-right"></th>
+                <th className="py-4 px-6 text-right">AKSI</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 font-medium">
-              {documents.length === 0 ? (
+              {filteredDocuments.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="py-8 px-6 text-center">
+                  <td colSpan={5} className="py-8 px-6 text-center">
                     <div className="border-2 border-dashed border-[#190c4d] bg-gray-50 rounded-xl p-8 max-w-sm mx-auto flex flex-col items-center justify-center">
                       <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm border border-gray-200 mb-3">
                         <i className="fa-solid fa-file-arrow-up text-[#190c4d] text-lg"></i>
@@ -278,7 +309,7 @@ const AnalisisDokumen = () => {
                     </div>
                   </td>
                 </tr>
-              ) : documents.map((doc, idx) => {
+              ) : filteredDocuments.map((doc, idx) => {
                 const dateStr = new Date(doc.createdAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
                 // Simulate classifications for visual variety
                 let badgeClass = 'bg-blue-100 text-blue-700';
@@ -294,10 +325,13 @@ const AnalisisDokumen = () => {
                     </td>
                     <td className="py-4 px-6 font-semibold text-gray-700">{doc.author.name} vs Instansi</td>
                     <td className="py-4 px-6 text-gray-600">{dateStr}</td>
-                    <td className="py-4 px-6 text-right">
+                    <td className="py-4 px-6 flex items-center justify-end space-x-3">
                       <span className={`font-bold px-3 py-1.5 rounded-md text-[10px] ${badgeClass}`}>
                         {badgeText}
                       </span>
+                      <button onClick={() => handleDelete(doc.id)} className="w-7 h-7 flex items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition cursor-pointer" title="Hapus">
+                        <i className="fa-solid fa-trash-can text-[11px]"></i>
+                      </button>
                     </td>
                   </tr>
                 );
@@ -305,7 +339,7 @@ const AnalisisDokumen = () => {
             </tbody>
           </table>
           <div className="bg-gray-50 py-3 px-6 text-[10px] text-gray-500 flex justify-between items-center border-t border-gray-100">
-            <span>Menampilkan 1-{documents.length || 0} dari {documents.length || 0} hasil analisis</span>
+            <span>Menampilkan 1-{filteredDocuments.length || 0} dari {filteredDocuments.length || 0} hasil analisis</span>
             <div className="flex space-x-1">
               <button className="w-6 h-6 rounded bg-white border border-gray-200 flex items-center justify-center cursor-pointer hover:bg-gray-100">&lt;</button>
               <button className="w-6 h-6 rounded bg-[#190c4d] text-white flex items-center justify-center cursor-pointer">1</button>
@@ -358,7 +392,7 @@ const AnalisisDokumen = () => {
               <div className="p-6 space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-gray-700 mb-2">Status Analisis</label>
-                  <select className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]">
+                  <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]">
                     <option value="">Semua Status</option>
                     <option value="selesai">Selesai</option>
                     <option value="proses">Proses</option>
@@ -367,7 +401,7 @@ const AnalisisDokumen = () => {
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-700 mb-2">Klasifikasi Keamanan</label>
-                  <select className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]">
+                  <select value={filterKlasifikasi} onChange={(e) => setFilterKlasifikasi(e.target.value)} className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]">
                     <option value="">Semua Klasifikasi</option>
                     <option value="terbuka">Terbuka</option>
                     <option value="rahasia">Rahasia</option>

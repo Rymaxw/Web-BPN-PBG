@@ -18,8 +18,7 @@ interface DocItem {
 const ArsipDigital = () => {
   const [documents, setDocuments] = useState<DocItem[]>([]);
   const [modul, setModul] = useState('sengketa');
-  const [showTimeFilter, setShowTimeFilter] = useState(false);
-  const [timeFilter, setTimeFilter] = useState('Semua Waktu');
+  const [selectedDate, setSelectedDate] = useState('');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const handleUploadFake = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,18 +112,12 @@ const ArsipDigital = () => {
 
       <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
         <div className="relative">
-          <button onClick={() => setShowTimeFilter(!showTimeFilter)} className="bg-white border border-gray-300 text-xs font-semibold px-4 py-2 rounded-xl text-gray-800 hover:bg-gray-50 transition shadow-sm cursor-pointer flex items-center space-x-2">
-            <i className="fa-regular fa-calendar"></i>
-            <span>{timeFilter}</span>
-          </button>
-          
-          {showTimeFilter && (
-            <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 shadow-xl rounded-lg overflow-hidden z-20">
-              <button onClick={() => { setTimeFilter('Semua Waktu'); setShowTimeFilter(false); }} className="block w-full text-left px-4 py-2 text-xs font-medium hover:bg-gray-50">Semua Waktu</button>
-              <button onClick={() => { setTimeFilter('7 Hari Terakhir'); setShowTimeFilter(false); }} className="block w-full text-left px-4 py-2 text-xs font-medium hover:bg-gray-50">7 Hari Terakhir</button>
-              <button onClick={() => { setTimeFilter('Bulan Ini'); setShowTimeFilter(false); }} className="block w-full text-left px-4 py-2 text-xs font-medium hover:bg-gray-50">Bulan Ini</button>
-            </div>
-          )}
+          <input 
+            type="date" 
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="bg-white border border-gray-300 text-xs font-semibold px-4 py-2 rounded-xl text-gray-800 hover:bg-gray-50 transition shadow-sm cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#190c4d]"
+          />
         </div>
 
         <button onClick={() => setShowAdvancedFilter(true)} className="bg-white border border-gray-300 text-xs font-semibold px-4 py-2 rounded-xl text-gray-800 hover:bg-gray-50 transition shadow-sm cursor-pointer flex items-center space-x-2">
