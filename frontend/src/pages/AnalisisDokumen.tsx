@@ -53,6 +53,11 @@ const AnalisisDokumen = () => {
       alert('Masukkan Teks Perkara atau Unggah Dokumen terlebih dahulu.');
       return;
     }
+
+    if (selectedFilePerkara && selectedFilePerkara.size > 2 * 1024 * 1024) {
+      alert('Ukuran file maksimal 2MB!');
+      return;
+    }
     setIsProcessing(true);
     
     try {

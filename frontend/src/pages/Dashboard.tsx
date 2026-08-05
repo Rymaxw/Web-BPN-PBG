@@ -133,6 +133,11 @@ const Dashboard = () => {
       return;
     }
 
+    if (selectedFile && selectedFile.size > 2 * 1024 * 1024) {
+      alert('Ukuran file maksimal 2MB!');
+      return;
+    }
+
     setIsUploading(true);
     try {
       const user = JSON.parse(localStorage.getItem('user') || '{}');

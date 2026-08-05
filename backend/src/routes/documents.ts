@@ -6,7 +6,10 @@ import fs from 'fs';
 
 // Configure multer storage for Serverless (Memory)
 const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const upload = multer({ 
+  storage,
+  limits: { fileSize: 2 * 1024 * 1024 } // Limit file size to 2MB
+});
 
 const router = Router();
 
