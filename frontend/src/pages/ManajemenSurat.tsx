@@ -24,12 +24,16 @@ const ManajemenSurat = () => {
     fetch(`${API_URL}/documents?tipe=${savedModul}`)
       .then(r => r.json())
       .then((data: DocItem[]) => {
-        setDocuments(data);
-        if (data.length > 0) {
-          setSelectedDocId(data[0].id);
+        if (Array.isArray(data)) {
+          setDocuments(data);
+          if (data.length > 0) {
+            setSelectedDocId(data[0].id);
+          }
+        } else {
+          setDocuments([]);
         }
       })
-      .catch(() => {});
+      .catch(() => { setDocuments([]); });
   }, []);
 
   const handleUpdateStatus = async (newStatus: string) => {

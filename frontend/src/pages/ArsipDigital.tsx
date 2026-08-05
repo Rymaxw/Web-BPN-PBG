@@ -32,8 +32,11 @@ const ArsipDigital = () => {
     setModul(savedModul);
     fetch(`${API_URL}/documents?tipe=${savedModul}`)
       .then(r => r.json())
-      .then(data => setDocuments(data))
-      .catch(() => {});
+      .then(data => {
+        if (Array.isArray(data)) setDocuments(data);
+        else setDocuments([]);
+      })
+      .catch(() => { setDocuments([]); });
   }, []);
 
   const isPerkara = modul === 'perkara';

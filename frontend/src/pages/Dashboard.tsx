@@ -73,13 +73,19 @@ const Dashboard = () => {
   const fetchData = () => {
     fetch(`${API_URL}/documents?tipe=${modul}`)
       .then(r => r.json())
-      .then(data => setDocuments(data))
-      .catch(() => { });
+      .then(data => {
+        if (Array.isArray(data)) setDocuments(data);
+        else setDocuments([]);
+      })
+      .catch(() => { setDocuments([]); });
 
     fetch(`${API_URL}/documents/stats?tipe=${modul}`)
       .then(r => r.json())
-      .then(data => setStats(data))
-      .catch(() => { });
+      .then(data => {
+        if (data && typeof data.total === 'number') setStats(data);
+        else setStats({ total: 0, proses: 0, selesai: 0, error: 0 });
+      })
+      .catch(() => { setStats({ total: 0, proses: 0, selesai: 0, error: 0 }); });
   };
 
   useEffect(() => {
