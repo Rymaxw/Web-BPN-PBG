@@ -15,7 +15,7 @@ interface DocItem {
   createdAt: string;
 }
 
-const AnalisisDokumen = () => {
+const AnalisisDokumen = () => { 
   const [documents, setDocuments] = useState<DocItem[]>([]);
   const [modul, setModul] = useState('sengketa');
   const [showFilterModal, setShowFilterModal] = useState(false);
@@ -67,7 +67,7 @@ const AnalisisDokumen = () => {
 
   const renderSengketa = () => (
     <>
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
           <div>
             <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">KATEGORI TERBANYAK</p>
@@ -111,10 +111,10 @@ const AnalisisDokumen = () => {
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col md:flex-row justify-between md:items-center items-start gap-4">
           <h3 className="font-bold text-sm text-gray-900">Daftar Dokumen Sedang Dianalisis</h3>
-          <div className="flex items-center space-x-2">
-            <button onClick={() => alert('Filter model AI dalam tahap pengembangan lanjutan.')} className="p-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition text-gray-800 cursor-pointer">
+          <div className="flex items-center space-x-2 w-full md:w-auto">
+            <button onClick={() => alert('Filter model AI dalam tahap pengembangan lanjutan.')} className="flex-1 md:flex-none p-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition text-gray-800 cursor-pointer text-center">
               <i className="fa-solid fa-sliders text-sm"></i>
             </button>
             <button onClick={() => {
@@ -191,14 +191,14 @@ const AnalisisDokumen = () => {
 
   const renderPerkara = () => (
     <>
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Teks Perkara & Unggah (2/3 width) */}
-        <div className="col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+        <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm p-6">
           <div className="mb-4">
             <i className="fa-solid fa-list-check text-xl text-gray-800"></i>
           </div>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
               <label className="block text-xs font-bold text-gray-900">Teks Perkara / Resume</label>
               <textarea 
@@ -333,7 +333,7 @@ const AnalisisDokumen = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between md:items-center items-start gap-4">
         <div>
           <h2 className="text-xl font-bold text-gray-900">Analisis Dokumen Surat Pengadilan ({isPerkara ? 'Perkara' : 'Sengketa'})</h2>
           <p className="text-xs text-gray-500 mt-0.5">
@@ -344,8 +344,8 @@ const AnalisisDokumen = () => {
         </div>
         
         {isPerkara && (
-          <div className="flex space-x-2">
-            <button onClick={() => setShowFilterModal(true)} className="bg-white border border-gray-300 text-xs font-bold px-4 py-2 rounded-lg text-gray-800 hover:bg-gray-50 transition shadow-sm cursor-pointer flex items-center space-x-2">
+          <div className="flex space-x-2 w-full md:w-auto">
+            <button onClick={() => setShowFilterModal(true)} className="flex-1 md:flex-none justify-center bg-white border border-gray-300 text-xs font-bold px-4 py-2 rounded-lg text-gray-800 hover:bg-gray-50 transition shadow-sm cursor-pointer flex items-center space-x-2">
               <i className="fa-solid fa-filter"></i>
               <span>Filter</span>
             </button>
@@ -362,8 +362,8 @@ const AnalisisDokumen = () => {
       {/* MODAL FILTER */}
       {
         showFilterModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-in fade-in py-10">
-            <div className="bg-white w-[400px] rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-full animate-in zoom-in-95 duration-200">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-in fade-in py-10 p-4">
+            <div className="bg-white w-full max-w-[400px] rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200">
               <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
                 <h3 className="font-bold text-sm text-gray-900">Filter Analisis Dokumen</h3>
                 <button onClick={() => setShowFilterModal(false)} className="text-gray-400 hover:text-gray-600 cursor-pointer"><i className="fa-solid fa-xmark"></i></button>
@@ -400,8 +400,8 @@ const AnalisisDokumen = () => {
       {/* MODAL EKSPOR LAPORAN */}
       {
         showExportModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-in fade-in py-10">
-            <div className="bg-white w-[500px] rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-full animate-in zoom-in-95 duration-200">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-in fade-in py-10 p-4">
+            <div className="bg-white w-full max-w-[500px] rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200">
               <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
                 <div>
                   <h3 className="font-bold text-sm text-gray-900">Cetak Laporan Perkara</h3>
@@ -411,7 +411,7 @@ const AnalisisDokumen = () => {
               </div>
               
               <div className="p-6 overflow-y-auto flex-1">
-                <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                   
                   {/* PDF Option */}
                   <div 

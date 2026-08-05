@@ -75,18 +75,18 @@ const ArsipDigital = () => {
   ];
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-start">
+      <div className="flex flex-col md:flex-row justify-between md:items-start items-start gap-4">
         <div>
           <h2 className="text-xl font-bold text-gray-900">Arsip Digital: Surat Pengaduan ({isPerkara ? 'Perkara' : 'Sengketa'})</h2>
           <p className="text-xs text-gray-500 mt-0.5">Manajemen berkas pertanahan dan analisis dokumen legal surat pengaduan {isPerkara ? 'perkara' : 'sengketa'} Kantor Pertanahan.</p>
         </div>
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 w-full md:w-auto">
           <span className="bg-[#190c4d] text-white text-[10px] font-bold px-3 py-1 rounded-md flex items-center space-x-1.5"><i className="fa-solid fa-lock text-[9px]"></i><span>INTERNAL</span></span>
-          <span className="text-[10px] text-gray-400 font-medium">Update terakhir: 12 Juli 2025, 09:41</span>
+          <span className="text-[10px] text-gray-400 font-medium truncate">Update terakhir: 12 Juli 2025, 09:41</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center space-x-3">
           <div className="p-3 bg-sky-100 text-sky-800 rounded-lg text-lg"><i className="fa-solid fa-folder"></i></div>
           <div><p className="text-[11px] text-gray-500 font-semibold">Total Dokumen</p><p className="text-xl font-bold text-gray-900">{documents.length}</p></div>
@@ -105,7 +105,7 @@ const ArsipDigital = () => {
         </div>
       </div>
 
-      <div className="flex justify-end space-x-3">
+      <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
         <div className="relative">
           <button onClick={() => setShowTimeFilter(!showTimeFilter)} className="bg-white border border-gray-300 text-xs font-semibold px-4 py-2 rounded-xl text-gray-800 hover:bg-gray-50 transition shadow-sm cursor-pointer flex items-center space-x-2">
             <i className="fa-regular fa-calendar"></i>
@@ -129,7 +129,7 @@ const ArsipDigital = () => {
 
       <div>
         <h3 className="font-bold text-sm text-gray-900 mb-3">Dokumen Terbaru</h3>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {filteredDocuments.slice(0, 3).map((doc, idx) => {
             const dateStr = new Date(doc.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
             return (
@@ -210,9 +210,9 @@ const ArsipDigital = () => {
 
       {/* FILTER LANJUTAN MODAL */}
       {showAdvancedFilter && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-in fade-in">
-          <div className="bg-white w-[500px] rounded-2xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-200">
-            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-in fade-in py-10 p-4">
+          <div className="bg-white w-full max-w-[500px] rounded-2xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
+            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white shrink-0">
               <div>
                 <h3 className="font-bold text-gray-900 text-sm">Filter Lanjutan Arsip {isPerkara ? 'Perkara' : 'Sengketa'}</h3>
                 <p className="text-[11px] text-gray-500 mt-0.5">Sesuaikan kriteria pencarian dokumen pengaduan {isPerkara ? 'perkara' : 'sengketa'}</p>
@@ -222,7 +222,7 @@ const ArsipDigital = () => {
               </button>
             </div>
             
-            <div className="p-6 space-y-5 bg-white">
+            <div className="p-6 space-y-5 bg-white overflow-y-auto flex-1">
               <div>
                 <label className="block text-xs font-bold text-gray-800 mb-2">Tipe {isPerkara ? 'Perkara' : 'Sengketa'}</label>
                 <div className="flex flex-wrap gap-2">

@@ -181,15 +181,15 @@ const ManajemenSurat = () => {
       {/* -------------------- LAYOUT NORMAL (WEB UI) -------------------- */}
       <div className="space-y-6 print:hidden">
       {/* Breadcrumb & Selector */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center items-start gap-3">
         <div className="text-xs text-gray-500 font-medium">
           Manajemen Surat &gt; <span className="text-gray-900 font-semibold">Detail Pelacakan</span>
         </div>
-        <div>
+        <div className="w-full sm:w-auto">
           <select 
             value={selectedDocId} 
             onChange={(e) => setSelectedDocId(e.target.value)}
-            className="bg-white border border-gray-300 text-xs font-semibold px-3 py-1.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#190c4d] shadow-sm cursor-pointer min-w-[200px]"
+            className="w-full sm:w-auto bg-white border border-gray-300 text-xs font-semibold px-3 py-1.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#190c4d] shadow-sm cursor-pointer min-w-[200px]"
           >
             {documents.map(doc => (
               <option key={doc.id} value={doc.id}>{doc.noBerkas} - {doc.judul.substring(0, 20)}...</option>
@@ -199,21 +199,21 @@ const ManajemenSurat = () => {
       </div>
 
       {/* Alert SLA Banner */}
-      <div className={`${slaConfig.color} border rounded-xl p-4 flex justify-between items-center transition-colors duration-500`}>
+      <div className={`${slaConfig.color} border rounded-xl p-4 flex flex-col sm:flex-row justify-between sm:items-center items-start gap-3 transition-colors duration-500`}>
         <div>
           <h4 className={`font-bold text-sm ${slaConfig.titleColor}`}>{slaConfig.title}</h4>
           <p className={`text-xs mt-0.5 ${slaConfig.descColor}`}>{slaConfig.desc}</p>
         </div>
-        <button onClick={slaConfig.btnAction} className={`${slaConfig.btnColor} font-bold text-xs px-5 py-2 rounded-lg transition shadow-sm cursor-pointer`}>
+        <button onClick={slaConfig.btnAction} className={`${slaConfig.btnColor} font-bold text-xs px-5 py-2 rounded-lg transition shadow-sm cursor-pointer whitespace-nowrap`}>
           {slaConfig.btnText}
         </button>
       </div>
 
       {/* Main Surat Header Code & Buttons */}
-      <div className="flex justify-between items-center">
-        <div className="flex items-center space-x-4">
-          <h2 className="text-2xl font-black text-gray-900 tracking-tight">{selectedDoc.noBerkas}</h2>
-          <span className={`text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider ${isCompleted ? 'bg-emerald-100 text-emerald-800' : (selectedDoc.status === 'error' ? 'bg-red-100 text-red-800' : 'bg-sky-100 text-sky-800')}`}>
+      <div className="flex flex-col md:flex-row justify-between md:items-center items-start gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center items-start gap-2 sm:space-x-4">
+          <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">{selectedDoc.noBerkas}</h2>
+          <span className={`text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider w-fit ${isCompleted ? 'bg-emerald-100 text-emerald-800' : (selectedDoc.status === 'error' ? 'bg-red-100 text-red-800' : 'bg-sky-100 text-sky-800')}`}>
             {selectedDoc.status === 'error' ? 'BERMASALAH' : (isCompleted ? 'SELESAI' : 'PROSES PERSETUJUAN')}
           </span>
         </div>
@@ -253,10 +253,11 @@ const ManajemenSurat = () => {
         </div>
 
         {/* Horizontal Stepper Lines & Nodes */}
-        <div className="relative py-4 px-8">
-          <div className="absolute top-1/2 left-12 right-12 h-0.5 bg-gray-300 -translate-y-4 -z-0"></div>
+        <div className="overflow-x-auto pb-4">
+          <div className="relative py-4 px-8 min-w-[600px]">
+            <div className="absolute top-1/2 left-12 right-12 h-0.5 bg-gray-300 -translate-y-4 -z-0"></div>
 
-          <div className="grid grid-cols-5 text-center relative z-10">
+            <div className="grid grid-cols-5 text-center relative z-10">
             <div className="flex flex-col items-center space-y-1.5">
               <div className="w-9 h-9 rounded-lg bg-indigo-700 text-white flex items-center justify-center font-bold text-sm shadow-sm">
                 <i className="fa-solid fa-check"></i>
@@ -301,8 +302,8 @@ const ManajemenSurat = () => {
       </div>
 
       {/* Bottom Section: Detail Tahapan Aktif & Informasi Dokumen */}
-      <div className="grid grid-cols-3 gap-6">
-        <div className="col-span-2 bg-gray-200/60 rounded-xl border border-gray-300 p-5 space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-gray-200/60 rounded-xl border border-gray-300 p-5 space-y-4">
           <div className="flex justify-between items-center border-b border-gray-300 pb-3">
             <h3 className="font-bold text-xs text-gray-900 uppercase tracking-wide">DETAIL TAHAPAN AKTIF</h3>
             <span className="bg-gray-300 text-gray-800 text-[10px] font-bold px-3 py-1 rounded">Durasi: 4 Jam</span>
@@ -372,9 +373,9 @@ const ManajemenSurat = () => {
 
       {/* Kronologi Pergerakan Berkas Table */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col md:flex-row justify-between md:items-center items-start gap-3">
           <h3 className="font-bold text-sm text-gray-900 uppercase tracking-wide">KRONOLOGI PERGERAKAN BERKAS</h3>
-          <div className="relative w-72">
+          <div className="relative w-full md:w-72">
             <input type="text" placeholder="Cari riwayat..." className="w-full bg-gray-100 border border-gray-300 rounded-lg text-xs px-3 py-1.5 pl-8 focus:outline-none" />
             <i className="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-[10px] text-gray-500"></i>
           </div>

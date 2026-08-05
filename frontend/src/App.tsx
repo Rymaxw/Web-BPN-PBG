@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './layout/MainLayout';
 import Dashboard from './pages/Dashboard';
 import ManajemenSurat from './pages/ManajemenSurat';
-import AnalisisDokumen from './pages/AnalisisDokumen';
+import AnalisisDokumen from './pages/AnalisisDokumen'; 
 import ArsipDigital from './pages/ArsipDigital';
 import Pengaturan from './pages/Pengaturan';
 import Login from './pages/Login';

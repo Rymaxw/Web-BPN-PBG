@@ -1,8 +1,17 @@
-const Header = () => {
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
+
+const Header = ({ onMenuClick }: HeaderProps) => {
   return (
-    <header className="bg-white border-b border-gray-200 px-8 py-3 flex justify-between items-center sticky top-0 z-30">
-      <div className="flex items-center space-x-3 w-1/2">
-        <div className="relative">
+    <header className="bg-white border-b border-gray-200 px-4 md:px-8 py-3 flex justify-between items-center sticky top-0 z-30 h-16">
+      <div className="flex items-center space-x-3 md:w-1/2 w-full">
+        {onMenuClick && (
+          <button onClick={onMenuClick} className="lg:hidden text-gray-700 hover:text-gray-900 focus:outline-none p-1">
+            <i className="fa-solid fa-bars text-lg"></i>
+          </button>
+        )}
+        <div className="relative hidden md:block">
           <select 
             value={localStorage.getItem('modulAktif') === 'perkara' ? 'Perkara (Pengadilan)' : 'Sengketa (Pengaduan)'}
             onChange={(e) => {
@@ -17,8 +26,8 @@ const Header = () => {
           </select>
           <i className="fa-solid fa-chevron-down absolute right-2.5 top-3 text-[10px] text-gray-500 pointer-events-none"></i>
         </div>
-        <div className="relative flex-1">
-          <input type="text" placeholder="Cari data atau berkas..." className="w-full bg-gray-100 text-xs text-gray-700 rounded-lg px-4 py-2 focus:outline-none" />
+        <div className="relative flex-1 max-w-[200px] md:max-w-none">
+          <input type="text" placeholder="Cari..." className="w-full bg-gray-100 text-xs text-gray-700 rounded-lg px-3 md:px-4 py-2 focus:outline-none" />
           <i className="fa-solid fa-magnifying-glass absolute right-3 top-2.5 text-[10px] text-gray-400"></i>
         </div>
       </div>

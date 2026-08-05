@@ -157,15 +157,15 @@ const Dashboard = () => {
 
   const renderSengketa = () => (
     <>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col md:flex-row justify-between md:items-center items-start mb-6 gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900">
             Dashboard Sengketa
           </h2>
           <p className="text-xs text-gray-500 mt-0.5">Selamat pagi, {JSON.parse(localStorage.getItem('user') || '{}').name || 'Admin'}</p>
         </div>
 
-        <div className="flex items-center space-x-3 relative">
+        <div className="flex flex-wrap items-center gap-2 md:space-x-3 relative">
           <button type="button" className="bg-white border border-gray-300 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center space-x-2 text-gray-700 hover:bg-gray-50 transition shadow-sm cursor-pointer">
             <i className="fa-regular fa-calendar"></i>
             <span>7 Hari Terakhir</span>
@@ -179,7 +179,7 @@ const Dashboard = () => {
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center space-x-4">
           <div className="p-3 bg-blue-50 text-[#190c4d] rounded-lg text-xl">
             <i className={isPerkara ? "fa-solid fa-gavel" : "fa-solid fa-folder-open"}></i>
@@ -224,21 +224,21 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex flex-col md:flex-row justify-between md:items-center items-start mb-4 gap-3">
           <span className="text-xs text-gray-500">Daftar Antrean <span className="font-semibold text-gray-700">(Total {stats.total} berkas terdaftar)</span></span>
-          <div className="flex items-center space-x-2">
-            <div className="relative">
+          <div className="flex items-center space-x-2 w-full md:w-auto">
+            <div className="relative flex-1 md:flex-none">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Cari No.Berkas/Judul..."
-                className="bg-gray-100 text-[11px] border border-gray-200 rounded-lg px-3 py-1 pl-7 w-48 focus:outline-none"
+                className="bg-gray-100 text-[11px] border border-gray-200 rounded-lg px-3 py-1.5 pl-7 w-full md:w-48 focus:outline-none"
               />
-              <i className="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-[10px] text-gray-400"></i>
+              <i className="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-[10px] text-gray-400"></i>
             </div>
-            <button onClick={() => setShowUploadModal(true)} className="bg-[#190c4d] text-white text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-indigo-950 transition cursor-pointer flex items-center space-x-1 ml-2">
-              <span>+ Tambah Berkas Baru</span>
+            <button onClick={() => setShowUploadModal(true)} className="bg-[#190c4d] text-white text-[10px] md:text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-indigo-950 transition cursor-pointer flex items-center space-x-1 shrink-0">
+              <span>+ Berkas Baru</span>
             </button>
           </div>
         </div>
@@ -276,7 +276,7 @@ const Dashboard = () => {
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
           <h3 className="font-bold text-xs text-gray-900 uppercase tracking-wide mb-4">DISTRIBUSI BEBAN KERJA</h3>
           <div className="flex-1 flex justify-center items-center min-h-[150px] mb-4">
@@ -385,15 +385,15 @@ const Dashboard = () => {
 
   const renderPerkara = () => (
     <>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col md:flex-row justify-between md:items-center items-start mb-6 gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900">
             Dashboard Perkara
           </h2>
           <p className="text-xs text-gray-500 mt-0.5">Ringkasan operasional dan penanganan perkara pengadilan hari ini.</p>
         </div>
 
-        <div className="flex items-center space-x-3 relative">
+        <div className="flex flex-wrap items-center gap-2 relative">
           <button type="button" className="bg-white border border-gray-300 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center space-x-2 text-gray-700 hover:bg-gray-50 transition shadow-sm cursor-pointer">
             <i className="fa-regular fa-calendar"></i>
             <span>Kalender</span>
@@ -407,7 +407,7 @@ const Dashboard = () => {
       </div>
 
       {/* Stat Cards Perkara */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
           <div className="flex justify-between items-start mb-4">
             <div className="w-10 h-10 bg-sky-50 text-sky-600 rounded-lg flex items-center justify-center text-lg"><i className="fa-solid fa-gavel"></i></div>
@@ -453,8 +453,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
-        <div className="col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm p-6">
           <div className="flex justify-between items-center mb-6">
             <h3 className="font-bold text-sm text-gray-900">Antrean Berkas Perkara</h3>
             <button className="text-xs text-gray-500 font-semibold hover:text-gray-900 transition flex items-center cursor-pointer">
@@ -581,8 +581,8 @@ const Dashboard = () => {
       {/* MODAL EKSPOR LAPORAN */}
       {
         showExportModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-in fade-in">
-            <div className="bg-white w-[600px] rounded-2xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-in fade-in p-4">
+            <div className="bg-white w-full max-w-[600px] rounded-2xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
               <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white">
                 <div>
                   <h3 className="font-bold text-lg text-gray-900">Cetak Laporan {isPerkara ? 'Perkara' : 'Sengketa'}</h3>
@@ -646,8 +646,8 @@ const Dashboard = () => {
       {/* MODAL UPLOAD / TAMBAH BERKAS */}
       {
         showUploadModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-in fade-in py-10">
-            <div className="bg-white w-[550px] rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-full animate-in zoom-in-95 duration-200">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-in fade-in py-10 p-4">
+            <div className="bg-white w-full max-w-[550px] rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200">
               <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-white shrink-0">
                 <div>
                   <h3 className="font-bold text-sm text-gray-900">Tambah Berkas Baru</h3>
@@ -660,7 +660,7 @@ const Dashboard = () => {
                 {/* IDENTITAS BERKAS */}
                 <div className="space-y-4">
                   <h4 className="text-[10px] font-bold text-[#190c4d] uppercase tracking-wider">IDENTITAS BERKAS</h4>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[11px] font-bold text-gray-800 mb-1">Nomor Berkas</label>
                       <input type="text" placeholder="Contoh : B-2025-IX-0000" className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]" />
@@ -682,7 +682,7 @@ const Dashboard = () => {
                     <label className="block text-[11px] font-bold text-gray-800 mb-1">Nama Pemohon/Institusi</label>
                     <input type="text" placeholder="Masukkan Nama Lengkap" className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]" />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[11px] font-bold text-gray-800 mb-1">NIK/NIB</label>
                       <input type="text" placeholder="16 digit angka" className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]" />
@@ -748,8 +748,8 @@ const Dashboard = () => {
       {/* MODAL EDIT JADWAL SIDANG */}
       {
         showJadwalModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-in fade-in py-10">
-            <div className="bg-white w-[500px] rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-full animate-in zoom-in-95 duration-200">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 animate-in fade-in py-10 p-4">
+            <div className="bg-white w-full max-w-[500px] rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200">
               <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
                 <div>
                   <h3 className="font-bold text-sm text-gray-900">Kelola Jadwal Sidang</h3>
@@ -760,7 +760,7 @@ const Dashboard = () => {
               <div className="p-6 overflow-y-auto space-y-4 flex-1">
                 <div className="bg-sky-50 rounded-lg p-4 border border-sky-100">
                   <h4 className="text-xs font-bold text-sky-900 mb-3">{editingJadwal.id ? 'Edit Jadwal' : 'Tambah Jadwal Baru'}</h4>
-                  <div className="grid grid-cols-2 gap-3 mb-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                     <div>
                       <label className="block text-[10px] font-bold text-gray-700 mb-1">Tanggal (Contoh: 16 Jul)</label>
                       <input type="text" value={editingJadwal.date} onChange={(e) => setEditingJadwal({...editingJadwal, date: e.target.value})} className="w-full bg-white border border-gray-300 rounded px-3 py-1.5 text-xs focus:outline-none focus:border-[#190c4d]" />
