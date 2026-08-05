@@ -73,13 +73,7 @@ const ArsipDigital = () => {
   const butuhReviewCount = documents.filter(d => d.status === 'proses').length;
   const recentCount = documents.filter(d => (new Date().getTime() - new Date(d.createdAt).getTime()) < 86400000).length; // 24h
   
-  // Dummy images for UI
-  const images = [
-    "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=300&q=80",
-    "https://images.unsplash.com/photo-1579389083395-4507e98b5e67?auto=format&fit=crop&w=300&q=80"
-  ];
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between md:items-start items-start gap-4">
@@ -131,8 +125,8 @@ const ArsipDigital = () => {
             const dateStr = new Date(doc.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
             return (
               <div key={doc.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow transition p-3 space-y-3">
-                <div className="h-32 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center border border-gray-200">
-                  <img src={images[idx % images.length]} className="w-full h-full object-cover" />
+                <div className="h-32 bg-gray-50 flex items-center justify-center border-b border-gray-100">
+                  <i className={`fa-regular ${idx % 2 === 0 ? 'fa-file-pdf text-red-400' : 'fa-file-word text-blue-400'} text-4xl`}></i>
                 </div>
                 <div className="space-y-1">
                   <p className="font-bold text-xs text-gray-900 truncate" title={doc.noBerkas}>{doc.noBerkas}</p>

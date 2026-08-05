@@ -18,6 +18,7 @@ interface DocItem {
 const ManajemenSurat = () => {
   const [documents, setDocuments] = useState<DocItem[]>([]);
   const [selectedDocId, setSelectedDocId] = useState<string>('');
+  const [showViewer, setShowViewer] = useState(false);
   
   useEffect(() => {
     const savedModul = localStorage.getItem('modulAktif') || 'sengketa';
@@ -67,7 +68,7 @@ const ManajemenSurat = () => {
     title: 'Informasi SLA Dokumen',
     desc: `Dokumen ini memiliki batas waktu penyelesaian pada ${deadlineDate.toLocaleDateString('id-ID')}. Sisa waktu: ${diffDays} hari.`,
     btnText: 'Tinjau Dokumen',
-    btnAction: () => alert('Meninjau dokumen normal.')
+    btnAction: () => setShowViewer(true)
   };
 
   if (isCompleted) {
@@ -223,7 +224,7 @@ const ManajemenSurat = () => {
         </div>
 
         <div className="flex items-center space-x-3">
-          <button onClick={() => alert('Fitur penampil PDF (scan) segera hadir.')} className="bg-white border border-gray-300 text-xs font-semibold px-3 py-2 rounded-lg flex items-center space-x-2 text-gray-700 hover:bg-gray-50 transition shadow-sm cursor-pointer">
+          <button onClick={() => setShowViewer(true)} className="bg-white border border-gray-300 text-xs font-semibold px-3 py-2 rounded-lg flex items-center space-x-2 text-gray-700 hover:bg-gray-50 transition shadow-sm cursor-pointer">
             <i className="fa-regular fa-eye"></i>
             <span>Lihat Lampiran Scan</span>
           </button>
@@ -421,6 +422,51 @@ const ManajemenSurat = () => {
         </div>
       </div>
     </div>
+
+    {/* MODAL PENAMPIL DOKUMEN (DUMMY PDF) */}
+    {showViewer && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 animate-in fade-in py-10 p-4">
+        <div className="bg-white w-full max-w-4xl h-[90vh] rounded-2xl shadow-xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
+          <div className="px-6 py-4 bg-gray-900 flex justify-between items-center text-white shrink-0">
+            <div className="flex items-center space-x-3">
+              <i className="fa-solid fa-file-pdf text-red-500 text-xl"></i>
+              <div>
+                <h3 className="font-bold text-sm leading-tight">{selectedDoc.judul}</h3>
+                <p className="text-[10px] text-gray-400">{selectedDoc.noBerkas}.pdf</p>
+              </div>
+            </div>
+            <button onClick={() => setShowViewer(false)} className="text-gray-400 hover:text-white cursor-pointer transition">
+              <i className="fa-solid fa-xmark text-xl"></i>
+            </button>
+          </div>
+          
+          <div className="flex-1 bg-gray-100 p-8 overflow-y-auto flex justify-center">
+            <div className="bg-white w-full max-w-2xl min-h-full shadow-md border border-gray-300 p-12 text-center text-gray-500 flex flex-col items-center">
+              <img src="/logo-bpn.png" alt="Logo" className="w-24 h-24 mb-6 grayscale opacity-20" />
+              <h2 className="text-2xl font-black text-gray-300 uppercase tracking-widest mb-4">SALINAN DIGITAL DOKUMEN</h2>
+              <div className="w-16 h-1 bg-gray-200 mb-8"></div>
+              
+              <div className="w-full text-left space-y-6 max-w-lg mx-auto">
+                <div className="bg-gray-100 h-4 rounded w-3/4"></div>
+                <div className="bg-gray-100 h-4 rounded w-full"></div>
+                <div className="bg-gray-100 h-4 rounded w-full"></div>
+                <div className="bg-gray-100 h-4 rounded w-5/6"></div>
+                
+                <div className="pt-8">
+                  <div className="bg-gray-100 h-4 rounded w-full"></div>
+                  <div className="bg-gray-100 h-4 rounded w-4/5 mt-6"></div>
+                  <div className="bg-gray-100 h-4 rounded w-full mt-6"></div>
+                </div>
+              </div>
+              
+              <p className="mt-16 text-xs text-gray-400 border border-gray-200 px-4 py-2 rounded-lg bg-gray-50">
+                (Pratinjau dokumen hasil unggahan Anda akan tampil di sini. Integrasi penyimpanan *cloud* masih dalam tahap *development*.)
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
     </>
   );
 };
