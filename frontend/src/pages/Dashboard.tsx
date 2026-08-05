@@ -51,8 +51,7 @@ const Dashboard = () => {
   const [showExportModal, setShowExportModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [exportFormat, setExportFormat] = useState('excel');
-  const [showTimeFilter, setShowTimeFilter] = useState(false);
-  const [timeFilter, setTimeFilter] = useState('7 Hari Terakhir');
+  const [selectedDate, setSelectedDate] = useState('');
 
   // Jadwal Sidang state
   const [jadwalSidang, setJadwalSidang] = useState([
@@ -175,17 +174,12 @@ const Dashboard = () => {
 
         <div className="flex flex-wrap items-center gap-2 md:space-x-3 relative">
           <div className="relative">
-            <button onClick={() => setShowTimeFilter(!showTimeFilter)} type="button" className="bg-white border border-gray-300 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center space-x-2 text-gray-700 hover:bg-gray-50 transition shadow-sm cursor-pointer">
-              <i className="fa-regular fa-calendar"></i>
-              <span>{timeFilter}</span>
-            </button>
-            {showTimeFilter && (
-              <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 shadow-xl rounded-lg overflow-hidden z-20">
-                <button onClick={() => { setTimeFilter('Semua Waktu'); setShowTimeFilter(false); }} className="block w-full text-left px-4 py-2 text-xs font-medium hover:bg-gray-50">Semua Waktu</button>
-                <button onClick={() => { setTimeFilter('7 Hari Terakhir'); setShowTimeFilter(false); }} className="block w-full text-left px-4 py-2 text-xs font-medium hover:bg-gray-50">7 Hari Terakhir</button>
-                <button onClick={() => { setTimeFilter('Bulan Ini'); setShowTimeFilter(false); }} className="block w-full text-left px-4 py-2 text-xs font-medium hover:bg-gray-50">Bulan Ini</button>
-              </div>
-            )}
+            <input 
+              type="date" 
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className="bg-white border border-gray-300 text-xs font-semibold px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-50 transition shadow-sm cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#190c4d]"
+            />
           </div>
 
           <button onClick={handleExport} type="button" className="bg-[#190c4d] text-white text-xs font-semibold px-4 py-1.5 rounded-lg flex items-center space-x-2 hover:bg-indigo-950 transition shadow-sm cursor-pointer">
