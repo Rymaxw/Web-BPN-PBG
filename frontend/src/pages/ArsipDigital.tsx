@@ -96,14 +96,10 @@ const ArsipDigital = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center space-x-3">
           <div className="p-3 bg-sky-100 text-sky-800 rounded-lg text-lg"><i className="fa-solid fa-folder"></i></div>
           <div><p className="text-[11px] text-gray-500 font-semibold">Total Dokumen</p><p className="text-xl font-bold text-gray-900">{documents.length}</p></div>
-        </div>
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center space-x-3">
-          <div className="p-3 bg-emerald-100 text-emerald-600 rounded-lg text-lg flex items-center justify-center"><i className="fa-solid fa-check"></i></div>
-          <div><p className="text-[11px] text-gray-500 font-semibold">Tervalidasi AI</p><p className="text-xl font-bold text-gray-900">98.2%</p></div>
         </div>
         <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center space-x-3">
           <div className="p-3 bg-red-100 text-red-700 rounded-lg text-lg"><i className="fa-solid fa-triangle-exclamation"></i></div>
