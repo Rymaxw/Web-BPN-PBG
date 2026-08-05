@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
@@ -20,6 +20,13 @@ const ArsipDigital = () => {
   const [modul, setModul] = useState('sengketa');
   const [showTimeFilter, setShowTimeFilter] = useState(false);
   const [timeFilter, setTimeFilter] = useState('Semua Waktu');
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const handleUploadFake = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if(e.target.files && e.target.files.length > 0) {
+      alert("Memproses unggahan file: " + e.target.files[0].name + "...\n(Fitur upload AI sedang dalam tahap finalisasi)");
+    }
+  };
   
   // Advanced Filter states
   const [showAdvancedFilter, setShowAdvancedFilter] = useState(false);
@@ -156,9 +163,10 @@ const ArsipDigital = () => {
             );
           })}
           
-          <div onClick={() => window.location.href = '/dashboard'} className="border-2 border-dashed border-[#190c4d] bg-indigo-50/50 rounded-xl p-4 text-center cursor-pointer hover:bg-indigo-100/50 transition flex flex-col items-center justify-center space-y-2">
+          <div onClick={() => fileInputRef.current?.click()} className="border-2 border-dashed border-[#190c4d] bg-indigo-50/50 rounded-xl p-4 text-center cursor-pointer hover:bg-indigo-100/50 transition flex flex-col items-center justify-center space-y-2 relative">
+            <input type="file" ref={fileInputRef} onChange={handleUploadFake} className="hidden" accept=".pdf,.docx,.jpg" />
             <div className="w-10 h-10 bg-white shadow-sm text-indigo-900 rounded-xl flex items-center justify-center text-lg"><i className="fa-solid fa-file-arrow-up"></i></div>
-            <div><h4 className="font-bold text-xs text-gray-900">Unggah Berkas Baru</h4><p className="text-[10px] text-gray-500 mt-1 leading-tight">Gunakan fitur tambah berkas di Dashboard Utama</p></div>
+            <div><h4 className="font-bold text-xs text-gray-900">Unggah Berkas Baru</h4><p className="text-[10px] text-gray-500 mt-1 leading-tight">Mendukung format PDF, DOCX, JPG</p></div>
           </div>
         </div>
       </div>

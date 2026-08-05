@@ -70,7 +70,7 @@ const AnalisisDokumen = () => {
 
   const renderSengketa = () => (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
           <div>
             <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">KATEGORI TERBANYAK</p>
@@ -80,22 +80,6 @@ const AnalisisDokumen = () => {
             <i className="fa-solid fa-chart-line text-xs mr-1.5 text-gray-800"></i>
             42% dari total sengketa
           </p>
-        </div>
-
-        <div className="bg-[#8b82f6] text-white p-5 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
-          <div>
-            <div className="flex justify-between items-start">
-              <p className="text-[10px] font-bold uppercase tracking-wide opacity-90">AKURASI MODEL</p>
-              <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                <i className="fa-solid fa-check text-white text-sm"></i>
-              </div>
-            </div>
-            <h3 className="text-3xl font-extrabold mt-1">92.4%</h3>
-          </div>
-          <p className="text-xs font-medium opacity-90 mt-4 flex items-center">
-            <i className="fa-solid fa-arrow-trend-up mr-1.5"></i> +1.2% dari minggu lalu
-          </p>
-          <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-white opacity-10 rounded-full blur-xl"></div>
         </div>
 
         <div className="bg-[#190c4d] text-white p-5 rounded-xl shadow-sm flex flex-col justify-between">

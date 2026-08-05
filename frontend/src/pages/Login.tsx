@@ -9,7 +9,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('admin@bpn.go.id');
-  const [password, setPassword] = useState('admin123');
+  const [password, setPassword] = useState('password123');
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
