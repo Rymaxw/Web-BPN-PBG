@@ -1,5 +1,28 @@
 import { Router, Request, Response } from 'express';
 import prisma from '../lib/prisma';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+
+// Ensure uploads directory exists
+const uploadDir = path.join(process.cwd(), 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Configure multer storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+  },
+});
+
+const upload = multer({ storage });
 
 const router = Router();
 
@@ -26,7 +49,7 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 // POST /api/documents - Buat dokumen baru
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', upload.single('file'), async (req: Request, res: Response) => {
   try {
     const { noBerkas, judul, lokasi, tipe, status, klasifikasi, keamanan, authorId } = req.body;
 
@@ -35,8 +58,13 @@ router.post('/', async (req: Request, res: Response) => {
       return;
     }
 
+    let fileUrl = null;
+    if (req.file) {
+      fileUrl = `/uploads/${req.file.filename}`;
+    }
+
     const document = await prisma.document.create({
-      data: { noBerkas, judul, lokasi, tipe, status, klasifikasi, keamanan, authorId },
+      data: { noBerkas, judul, lokasi, tipe, status, klasifikasi, keamanan, authorId, fileUrl },
     });
 
     res.status(201).json(document);
@@ -65,6 +93,27 @@ router.get('/stats', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Terjadi kesalahan pada server.' });
   }
 });
+
+// GET /api/documents/global-stats - Statistik grafik
+router.get('/global-stats', async (req: Request, res: Response) => {
+  try {
+    const sengketaCount = await prisma.document.count({ where: { tipe: 'sengketa' } });
+    const sengketaSelesai = await prisma.document.count({ where: { tipe: 'sengketa', status: 'selesai' } });
+    const perkaraCount = await prisma.document.count({ where: { tipe: 'perkara' } });
+    const perkaraProses = await prisma.document.count({ where: { tipe: 'perkara', status: 'proses' } });
+    
+    // Simulate trend based on created data (for now using raw query or simple counts)
+    const trend = {
+      sengketa: [12, 19, 15, 10, 22],
+      perkara: [5, 8, 12, 6, 15]
+    };
+
+    res.json({ sengketaCount, sengketaSelesai, perkaraCount, perkaraProses, trend });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // GET /api/documents/export - Ekspor data ke CSV
 router.get('/export', async (req: Request, res: Response) => {
   try {

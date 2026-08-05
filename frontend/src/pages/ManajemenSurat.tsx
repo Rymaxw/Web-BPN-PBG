@@ -13,6 +13,7 @@ interface DocItem {
   keamanan: string;
   author: { name: string };
   createdAt: string;
+  fileUrl?: string;
 }
 
 const ManajemenSurat = () => {
@@ -440,29 +441,37 @@ const ManajemenSurat = () => {
             </button>
           </div>
           
-          <div className="flex-1 bg-gray-100 p-8 overflow-y-auto flex justify-center">
-            <div className="bg-white w-full max-w-2xl min-h-full shadow-md border border-gray-300 p-12 text-center text-gray-500 flex flex-col items-center">
-              <img src="/logo-bpn.png" alt="Logo" className="w-24 h-24 mb-6 grayscale opacity-20" />
-              <h2 className="text-2xl font-black text-gray-300 uppercase tracking-widest mb-4">SALINAN DIGITAL DOKUMEN</h2>
-              <div className="w-16 h-1 bg-gray-200 mb-8"></div>
-              
-              <div className="w-full text-left space-y-6 max-w-lg mx-auto">
-                <div className="bg-gray-100 h-4 rounded w-3/4"></div>
-                <div className="bg-gray-100 h-4 rounded w-full"></div>
-                <div className="bg-gray-100 h-4 rounded w-full"></div>
-                <div className="bg-gray-100 h-4 rounded w-5/6"></div>
+          <div className="flex-1 bg-gray-100 overflow-hidden flex justify-center">
+            {selectedDoc.fileUrl ? (
+              <iframe 
+                src={`${API_URL.replace('/api', '')}${selectedDoc.fileUrl}`} 
+                className="w-full h-full border-none"
+                title="Document Viewer"
+              />
+            ) : (
+              <div className="bg-white w-full max-w-2xl min-h-full shadow-md border border-gray-300 p-12 text-center text-gray-500 flex flex-col items-center overflow-y-auto">
+                <img src="/logo-bpn.png" alt="Logo" className="w-24 h-24 mb-6 grayscale opacity-20" />
+                <h2 className="text-2xl font-black text-gray-300 uppercase tracking-widest mb-4">SALINAN DIGITAL DOKUMEN</h2>
+                <div className="w-16 h-1 bg-gray-200 mb-8"></div>
                 
-                <div className="pt-8">
+                <div className="w-full text-left space-y-6 max-w-lg mx-auto">
+                  <div className="bg-gray-100 h-4 rounded w-3/4"></div>
                   <div className="bg-gray-100 h-4 rounded w-full"></div>
-                  <div className="bg-gray-100 h-4 rounded w-4/5 mt-6"></div>
-                  <div className="bg-gray-100 h-4 rounded w-full mt-6"></div>
+                  <div className="bg-gray-100 h-4 rounded w-full"></div>
+                  <div className="bg-gray-100 h-4 rounded w-5/6"></div>
+                  
+                  <div className="pt-8">
+                    <div className="bg-gray-100 h-4 rounded w-full"></div>
+                    <div className="bg-gray-100 h-4 rounded w-4/5 mt-6"></div>
+                    <div className="bg-gray-100 h-4 rounded w-full mt-6"></div>
+                  </div>
                 </div>
+                
+                <p className="mt-16 text-xs text-gray-400 border border-gray-200 px-4 py-2 rounded-lg bg-gray-50">
+                  (Dokumen lama ini tidak memiliki salinan digital karena diunggah sebelum fitur Cloud Storage diaktifkan.)
+                </p>
               </div>
-              
-              <p className="mt-16 text-xs text-gray-400 border border-gray-200 px-4 py-2 rounded-lg bg-gray-50">
-                (Pratinjau dokumen hasil unggahan Anda akan tampil di sini. Integrasi penyimpanan *cloud* masih dalam tahap *development*.)
-              </p>
-            </div>
+            )}
           </div>
         </div>
       </div>

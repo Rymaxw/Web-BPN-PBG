@@ -26,6 +26,7 @@ model Document {
   status      String   @default("proses") // "proses", "selesai", "error"
   klasifikasi String   @default("terbuka")
   keamanan    String   @default("internal")
+  fileUrl     String?
   authorId    String
   author      User     @relation(fields: [authorId], references: [id])
   createdAt   DateTime @default(now())

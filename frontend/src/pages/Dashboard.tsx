@@ -43,10 +43,22 @@ interface Stats {
   error: number;
 }
 
+interface GlobalStats {
+  sengketaCount: number;
+  sengketaSelesai: number;
+  perkaraCount: number;
+  perkaraProses: number;
+  trend: { sengketa: number[]; perkara: number[] };
+}
+
 const Dashboard = () => {
   const [modul, setModul] = useState('sengketa');
   const [documents, setDocuments] = useState<DocItem[]>([]);
   const [stats, setStats] = useState<Stats>({ total: 0, proses: 0, selesai: 0, error: 0 });
+  const [globalStats, setGlobalStats] = useState<GlobalStats>({ 
+    sengketaCount: 0, sengketaSelesai: 0, perkaraCount: 0, perkaraProses: 0, 
+    trend: { sengketa: [0,0,0,0,0], perkara: [0,0,0,0,0] }
+  });
   const [searchQuery, setSearchQuery] = useState('');
   const [showExportModal, setShowExportModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -84,9 +96,15 @@ const Dashboard = () => {
       .then(r => r.json())
       .then(data => {
         if (data && typeof data.total === 'number') setStats(data);
-        else setStats({ total: 0, proses: 0, selesai: 0, error: 0 });
       })
       .catch(() => { setStats({ total: 0, proses: 0, selesai: 0, error: 0 }); });
+
+    fetch(`${API_URL}/documents/global-stats`)
+      .then(r => r.json())
+      .then(data => {
+        if (data && typeof data.sengketaCount === 'number') setGlobalStats(data);
+      })
+      .catch(console.error);
   };
 
   useEffect(() => {
@@ -118,18 +136,22 @@ const Dashboard = () => {
     setIsUploading(true);
     try {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
-      const payload = {
-        ...uploadData,
-        tipe: modul,
-        status: 'proses',
-        klasifikasi: 'rahasia',
-        authorId: user.id || 1, // fallback to admin if somehow missing
-      };
+      const formData = new FormData();
+      formData.append('noBerkas', uploadData.noBerkas);
+      formData.append('judul', uploadData.judul);
+      formData.append('lokasi', uploadData.lokasi);
+      formData.append('keamanan', uploadData.keamanan);
+      formData.append('klasifikasi', uploadData.klasifikasi);
+      formData.append('tipe', modul);
+      formData.append('status', 'proses');
+      formData.append('authorId', user.id || '1');
+      if (selectedFile) {
+        formData.append('file', selectedFile);
+      }
 
       const res = await fetch(`${API_URL}/documents`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: formData,
       });
 
       if (res.ok) {
@@ -296,7 +318,7 @@ const Dashboard = () => {
                 data={{
                   labels: ['Sengketa', 'Perkara'],
                   datasets: [{
-                    data: [70, 30],
+                    data: [globalStats.sengketaCount, globalStats.perkaraCount],
                     backgroundColor: ['#190c4d', '#f59e0b'],
                     borderWidth: 0,
                     hoverOffset: 4
@@ -333,19 +355,19 @@ const Dashboard = () => {
           <div>
             <div className="flex justify-between text-xs font-medium mb-1">
               <span className="text-gray-700">Penyelesaian Sengketa</span>
-              <span className="font-bold text-gray-900">82%</span>
+              <span className="font-bold text-gray-900">{globalStats.sengketaCount > 0 ? Math.round((globalStats.sengketaSelesai / globalStats.sengketaCount) * 100) : 0}%</span>
             </div>
             <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
-              <div className="bg-[#190c4d] h-2 rounded-full w-[82%]"></div>
+              <div className="bg-[#190c4d] h-2 rounded-full transition-all" style={{ width: `${globalStats.sengketaCount > 0 ? (globalStats.sengketaSelesai / globalStats.sengketaCount) * 100 : 0}%` }}></div>
             </div>
           </div>
           <div>
             <div className="flex justify-between text-xs font-medium mb-1">
               <span className="text-gray-700">Progres Perkara</span>
-              <span className="font-bold text-gray-900">54%</span>
+              <span className="font-bold text-gray-900">{globalStats.perkaraCount > 0 ? Math.round((globalStats.perkaraProses / globalStats.perkaraCount) * 100) : 0}%</span>
             </div>
             <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
-              <div className="bg-[#f59e0b] h-2 rounded-full w-[54%]"></div>
+              <div className="bg-[#f59e0b] h-2 rounded-full transition-all" style={{ width: `${globalStats.perkaraCount > 0 ? (globalStats.perkaraProses / globalStats.perkaraCount) * 100 : 0}%` }}></div>
             </div>
           </div>
         </div>
@@ -358,18 +380,8 @@ const Dashboard = () => {
               data={{
                 labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum'],
                 datasets: [
-                  {
-                    label: 'Sengketa',
-                    data: [12, 19, 15, 10, 14],
-                    backgroundColor: '#190c4d',
-                    borderRadius: 4
-                  },
-                  {
-                    label: 'Perkara',
-                    data: [5, 8, 4, 7, 6],
-                    backgroundColor: '#f59e0b',
-                    borderRadius: 4
-                  }
+                  { label: 'Sengketa', data: globalStats.trend.sengketa, backgroundColor: '#190c4d', borderRadius: 4 },
+                  { label: 'Perkara', data: globalStats.trend.perkara, backgroundColor: '#f59e0b', borderRadius: 4 }
                 ]
               }}
               options={{

@@ -57,21 +57,22 @@ const AnalisisDokumen = () => {
     
     try {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
-      const payload = {
-        noBerkas: `PRK/2026/AN-${Math.floor(Math.random() * 1000)}`,
-        judul: selectedFilePerkara ? selectedFilePerkara.name : 'Analisis Teks Manual',
-        lokasi: '-',
-        tipe: 'perkara',
-        status: 'selesai',
-        klasifikasi: 'rahasia',
-        keamanan: 'internal',
-        authorId: user.id || 1
-      };
+      const formData = new FormData();
+      formData.append('noBerkas', `PRK/2026/AN-${Math.floor(Math.random() * 1000)}`);
+      formData.append('judul', selectedFilePerkara ? selectedFilePerkara.name : 'Analisis Teks Manual');
+      formData.append('lokasi', '-');
+      formData.append('tipe', 'perkara');
+      formData.append('status', 'selesai');
+      formData.append('klasifikasi', 'rahasia');
+      formData.append('keamanan', 'internal');
+      formData.append('authorId', user.id || '1');
+      if (selectedFilePerkara) {
+        formData.append('file', selectedFilePerkara);
+      }
 
       const res = await fetch(`${API_URL}/documents`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: formData
       });
 
       if (res.ok) {

@@ -21,9 +21,35 @@ const ArsipDigital = () => {
   const [selectedDate, setSelectedDate] = useState('');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const handleUploadFake = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUploadFake = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if(e.target.files && e.target.files.length > 0) {
-      alert("Memproses unggahan file: " + e.target.files[0].name + "...\n(Fitur upload AI sedang dalam tahap finalisasi)");
+      const file = e.target.files[0];
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const formData = new FormData();
+      formData.append('noBerkas', `ARSIP/${new Date().getFullYear()}/${Math.floor(Math.random() * 1000)}`);
+      formData.append('judul', file.name);
+      formData.append('lokasi', '-');
+      formData.append('tipe', modul);
+      formData.append('status', 'selesai');
+      formData.append('klasifikasi', 'terbuka');
+      formData.append('keamanan', 'internal');
+      formData.append('authorId', user.id || '1');
+      formData.append('file', file);
+
+      try {
+        const res = await fetch(`${API_URL}/documents`, { method: 'POST', body: formData });
+        if (res.ok) {
+          alert("Berkas berhasil diunggah dan diarsipkan!");
+          // Refetch
+          const getRes = await fetch(`${API_URL}/documents?tipe=${modul}`);
+          const data = await getRes.json();
+          if (Array.isArray(data)) setDocuments(data);
+        } else {
+          alert("Gagal mengunggah berkas.");
+        }
+      } catch (err) {
+        alert("Terjadi kesalahan jaringan.");
+      }
     }
   };
   
