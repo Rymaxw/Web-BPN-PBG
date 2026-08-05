@@ -300,6 +300,7 @@ const ManajemenSurat = () => {
           </div>
         </div>
       </div>
+    </div>
 
       {/* Bottom Section: Detail Tahapan Aktif & Informasi Dokumen */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
