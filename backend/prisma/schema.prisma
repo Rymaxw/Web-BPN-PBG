@@ -27,6 +27,8 @@ model Document {
   klasifikasi String   @default("terbuka")
   keamanan    String   @default("internal")
   fileUrl     String?
+  fileData    Bytes?
+  fileMimeType String?
   authorId    String
   author      User     @relation(fields: [authorId], references: [id])
   createdAt   DateTime @default(now())
