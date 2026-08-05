@@ -8,8 +8,8 @@ const Login = () => {
   const [step, setStep] = useState<'login' | 'select_module'>('login');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('admin@bpn.go.id');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
