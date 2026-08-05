@@ -3,39 +3,37 @@ import { useNavigate, Link } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
-  const handleLoginSubmit = async (e: React.FormEvent) => {
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMsg('');
 
     try {
-      const res = await fetch(`${API_URL}/auth/login`, {
+      const res = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, password }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setErrorMsg(data.error || 'Login gagal.');
+        setErrorMsg(data.error || 'Pendaftaran gagal.');
         setIsLoading(false);
         return;
       }
 
-      // Simpan token dan data user ke localStorage
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('modulAktif', 'sengketa');
-      navigate('/dashboard');
+      alert("Pendaftaran berhasil! Silakan login.");
+      navigate('/login');
     } catch {
       setErrorMsg('Tidak dapat terhubung ke server. Pastikan backend berjalan.');
       setIsLoading(false);
@@ -53,16 +51,29 @@ const Login = () => {
             className="w-20 h-20 mx-auto mb-4 object-contain"
           />
           <h1 className="text-2xl font-black text-gray-900 tracking-tight">Kementerian ATR/BPN</h1>
-          <p className="text-sm text-gray-500 mt-1">Sistem Manajemen Sengketa & Perkara</p>
+          <p className="text-sm text-gray-500 mt-1">Daftar Akun Pegawai Baru</p>
         </div>
 
-        <form onSubmit={handleLoginSubmit} className="space-y-4 animate-in fade-in">
+        <form onSubmit={handleRegisterSubmit} className="space-y-4 animate-in fade-in">
           {errorMsg && (
             <div className="bg-red-50 text-red-600 p-3 rounded-lg text-xs font-bold flex items-center space-x-2 border border-red-200">
               <i className="fa-solid fa-circle-exclamation text-base"></i>
               <span>{errorMsg}</span>
             </div>
           )}
+
+          <div>
+            <label className="block text-xs font-bold text-gray-700 mb-1">Nama Lengkap</label>
+            <input 
+              type="text" 
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#190c4d] focus:border-transparent transition"
+              placeholder="Masukkan Nama Lengkap"
+            />
+          </div>
+
           <div>
             <label className="block text-xs font-bold text-gray-700 mb-1">NIP / Email</label>
             <input 
@@ -84,7 +95,7 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-[#190c4d] focus:border-transparent transition"
-                placeholder="Masukkan Kata Sandi"
+                placeholder="Buat Kata Sandi"
               />
               <button 
                 type="button" 
@@ -102,15 +113,12 @@ const Login = () => {
               disabled={isLoading}
               className="w-full bg-[#190c4d] hover:bg-indigo-950 text-white font-bold py-2.5 rounded-lg transition shadow-md flex justify-center items-center cursor-pointer disabled:opacity-70"
             >
-              {isLoading ? <i className="fa-solid fa-circle-notch fa-spin"></i> : 'Masuk'}
+              {isLoading ? <i className="fa-solid fa-circle-notch fa-spin"></i> : 'Daftar Sekarang'}
             </button>
           </div>
           
-          <div className="mt-4 flex flex-col space-y-2 text-center">
-            <a href="#" className="text-xs font-semibold text-[#190c4d] hover:underline">Lupa Kata Sandi?</a>
-            <span className="text-xs text-gray-500">
-              Belum punya akun? <Link to="/register" className="font-bold text-[#190c4d] hover:underline">Daftar di sini</Link>
-            </span>
+          <div className="mt-4 text-center">
+            <Link to="/login" className="text-xs font-semibold text-[#190c4d] hover:underline">Sudah punya akun? Masuk di sini</Link>
           </div>
         </form>
       </div>
@@ -118,4 +126,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

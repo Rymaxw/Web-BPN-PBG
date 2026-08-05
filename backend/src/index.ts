@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
 import documentRoutes from './routes/documents';
+import usersRoutes from './routes/users';
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/documents', documentRoutes);
+app.use('/api/users', usersRoutes);
 
 // Health check
 app.get('/api/health', (req: Request, res: Response) => {

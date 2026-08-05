@@ -6,6 +6,7 @@ import AnalisisDokumen from './pages/AnalisisDokumen';
 import ArsipDigital from './pages/ArsipDigital';
 import Pengaturan from './pages/Pengaturan';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import './App.css';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
