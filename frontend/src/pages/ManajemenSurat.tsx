@@ -57,6 +57,23 @@ const ManajemenSurat = () => {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (confirm('Yakin ingin menghapus dokumen ini secara permanen?')) {
+      try {
+        const res = await fetch(`${API_URL}/documents/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          setDocuments(docs => docs.filter(d => d.id !== id));
+          if (selectedDocId === id) setSelectedDocId('');
+          alert('Dokumen berhasil dihapus.');
+        } else {
+          alert('Gagal menghapus dokumen.');
+        }
+      } catch (err) {
+        alert('Terjadi kesalahan koneksi.');
+      }
+    }
+  };
+
   const selectedDoc = documents.find(d => d.id === selectedDocId);
 
   if (!selectedDoc) {
@@ -118,7 +135,7 @@ const ManajemenSurat = () => {
       title: 'Dokumen Bermasalah',
       desc: `Terdapat kendala pada dokumen ini. Perhitungan SLA dihentikan sementara hingga masalah tertangani.`,
       btnText: 'Selesaikan Kendala',
-      btnAction: () => alert('Membuka modul penyelesaian kendala dokumen.')
+      btnAction: () => alert('Gunakan tombol "Update Status" di bagian atas untuk merubah status kembali menjadi Proses/Selesai!')
     };
   } else if (diffDays <= 0) {
     slaConfig = {
@@ -254,6 +271,12 @@ const ManajemenSurat = () => {
           <button onClick={() => setShowViewer(true)} className="bg-white border border-gray-300 text-xs font-semibold px-3 py-2 rounded-lg flex items-center space-x-2 text-gray-700 hover:bg-gray-50 transition shadow-sm cursor-pointer">
             <i className="fa-regular fa-eye"></i>
             <span>Lihat Lampiran Scan</span>
+          </button>
+          
+          {/* Tombol Hapus */}
+          <button onClick={() => handleDelete(selectedDoc.id)} className="bg-red-50 hover:bg-red-500 hover:text-white text-red-600 border border-red-200 text-xs font-semibold px-3 py-2 rounded-lg flex items-center space-x-2 transition shadow-sm cursor-pointer" title="Hapus Berkas">
+            <i className="fa-solid fa-trash-can"></i>
+            <span className="hidden sm:inline">Hapus Berkas</span>
           </button>
           <div className="relative group">
             <button className="bg-[#190c4d] hover:bg-indigo-950 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center space-x-2 transition shadow-sm cursor-pointer">
