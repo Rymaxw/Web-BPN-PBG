@@ -66,10 +66,7 @@ const Dashboard = () => {
   const [selectedDate, setSelectedDate] = useState('');
 
   // Jadwal Sidang state
-  const [jadwalSidang, setJadwalSidang] = useState([
-    { id: 1, date: '14 Jul', location: 'PN Purbalingga - Ruang 1', detail: 'pukul 09.00 WIB - Perkara #0012' },
-    { id: 2, date: '15 Jul', location: 'PTUN Semarang', detail: 'pukul 10.30 WIB - Perkara #0013' }
-  ]);
+  const [jadwalSidang, setJadwalSidang] = useState<any[]>([]);
   const [showJadwalModal, setShowJadwalModal] = useState(false);
   const [editingJadwal, setEditingJadwal] = useState({ id: 0, date: '', location: '', detail: '' });
 
@@ -461,7 +458,7 @@ const Dashboard = () => {
           </div>
           <div>
             <p className="text-xs text-gray-900 font-bold mb-1">Perkara Berjalan</p>
-            <p className="text-2xl font-bold text-gray-900">142</p>
+            <p className="text-2xl font-bold text-gray-900">{stats.proses}</p>
           </div>
         </div>
 
@@ -472,7 +469,7 @@ const Dashboard = () => {
           </div>
           <div>
             <p className="text-xs text-gray-900 font-bold mb-1">Panggilan Sidang</p>
-            <p className="text-2xl font-bold text-gray-900">8</p>
+            <p className="text-2xl font-bold text-gray-900">{jadwalSidang.length}</p>
           </div>
         </div>
 
@@ -493,7 +490,7 @@ const Dashboard = () => {
           </div>
           <div className="relative z-10">
             <p className="text-[10px] text-indigo-100 font-bold uppercase tracking-wider mb-1">SELESAI BULAN INI</p>
-            <p className="text-2xl font-bold text-white">27 Case</p>
+            <p className="text-2xl font-bold text-white">{stats.selesai} Case</p>
           </div>
           <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl"></div>
         </div>
@@ -559,24 +556,40 @@ const Dashboard = () => {
             <div className="flex flex-col items-center mb-6">
               <div className="w-24 h-24 border-4 border-[#8c7349] rounded-xl rotate-45 flex items-center justify-center mb-4">
                 <div className="-rotate-45 text-center">
-                  <p className="text-lg font-bold text-gray-900">64%</p>
-                  <p className="text-[9px] text-gray-500 uppercase font-bold">Pusat Kota</p>
+                  <p className="text-lg font-bold text-gray-900">
+                    {filteredDocs.length > 0 ? '100%' : '0%'}
+                  </p>
+                  <p className="text-[9px] text-gray-500 uppercase font-bold">Terdistribusi</p>
                 </div>
               </div>
             </div>
             <div className="space-y-3">
-              <div className="flex justify-between items-center text-xs font-semibold">
-                <span className="flex items-center text-gray-700"><span className="w-2 h-2 rounded-full bg-[#8c7349] mr-2"></span>Purbalingga Kota</span>
-                <span className="text-gray-900">60</span>
-              </div>
-              <div className="flex justify-between items-center text-xs font-semibold">
-                <span className="flex items-center text-gray-700"><span className="w-2 h-2 rounded-full bg-blue-600 mr-2"></span>Bobotsari</span>
-                <span className="text-gray-900">32</span>
-              </div>
-              <div className="flex justify-between items-center text-xs font-semibold">
-                <span className="flex items-center text-gray-700"><span className="w-2 h-2 rounded-full bg-gray-400 mr-2"></span>Bukateja</span>
-                <span className="text-gray-900">24</span>
-              </div>
+              {(() => {
+                const lokasiCounts: Record<string, number> = {};
+                filteredDocs.forEach(d => {
+                  let l = d.lokasi.replace('Kec. ', '').trim();
+                  if (!l) return;
+                  lokasiCounts[l] = (lokasiCounts[l] || 0) + 1;
+                });
+                
+                const sortedLokasi = Object.entries(lokasiCounts).sort((a, b) => b[1] - a[1]).slice(0, 3);
+                
+                if (sortedLokasi.length === 0) {
+                   return <div className="text-center text-xs text-gray-500 py-4">Belum ada data distribusi wilayah</div>;
+                }
+                
+                const colors = ['bg-[#8c7349]', 'bg-blue-600', 'bg-gray-400'];
+                
+                return sortedLokasi.map(([nama, jumlah], idx) => (
+                  <div key={nama} className="flex justify-between items-center text-xs font-semibold">
+                    <span className="flex items-center text-gray-700">
+                      <span className={`w-2 h-2 rounded-full ${colors[idx % colors.length]} mr-2`}></span>
+                      {nama}
+                    </span>
+                    <span className="text-gray-900">{jumlah}</span>
+                  </div>
+                ));
+              })()}
             </div>
           </div>
 
