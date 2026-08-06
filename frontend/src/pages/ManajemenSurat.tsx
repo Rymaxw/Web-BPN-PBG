@@ -39,10 +39,20 @@ const ManajemenSurat = () => {
   }, []);
 
   const handleUpdateStatus = async (newStatus: string) => {
-    // In a real app we'd call a PUT endpoint, but since it's not fully built, we'll simulate
-    alert(`Status dokumen berhasil diubah menjadi: ${newStatus.toUpperCase()}`);
-    // Update local state for immediate feedback
-    setDocuments(docs => docs.map(d => d.id === selectedDocId ? { ...d, status: newStatus } : d));
+    try {
+      const res = await fetch(`${API_URL}/documents/${selectedDocId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!res.ok) throw new Error('Gagal update');
+      const updated = await res.json();
+      // Update local state with server response
+      setDocuments(docs => docs.map(d => d.id === updated.id ? { ...d, ...updated } : d));
+      alert(`Status dokumen berhasil diubah menjadi: ${newStatus.toUpperCase()}`);
+    } catch (err) {
+      alert('Gagal mengubah status dokumen.');
+    }
   };
 
   const selectedDoc = documents.find(d => d.id === selectedDocId);

@@ -196,6 +196,37 @@ router.get('/:id/file', async (req: Request, res: Response) => {
   }
 });
 
+// PUT /api/documents/:id - Update dokumen (status, klasifikasi, dll)
+router.put('/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { status, klasifikasi, keamanan, judul, lokasi } = req.body;
+
+    const updateData: Record<string, string> = {};
+    if (status) updateData.status = status;
+    if (klasifikasi) updateData.klasifikasi = klasifikasi;
+    if (keamanan) updateData.keamanan = keamanan;
+    if (judul) updateData.judul = judul;
+    if (lokasi) updateData.lokasi = lokasi;
+
+    const document = await prisma.document.update({
+      where: { id },
+      data: updateData,
+      select: {
+        id: true, noBerkas: true, judul: true, lokasi: true, tipe: true,
+        status: true, klasifikasi: true, keamanan: true, fileUrl: true,
+        authorId: true, createdAt: true, updatedAt: true,
+        author: { select: { id: true, name: true, email: true } }
+      },
+    });
+
+    res.json(document);
+  } catch (error) {
+    console.error('Update document error:', error);
+    res.status(500).json({ error: 'Gagal mengupdate dokumen' });
+  }
+});
+
 // DELETE /api/documents/:id - Hapus dokumen
 router.delete('/:id', async (req: Request, res: Response) => {
   try {
