@@ -340,7 +340,8 @@ const Dashboard = () => {
                   }
                 }}
               />
-            </div>
+                );
+              })()}
             </div>
           </div>
           <div className="space-y-2 text-xs">

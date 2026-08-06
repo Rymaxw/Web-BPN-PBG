@@ -174,7 +174,7 @@ const AnalisisDokumen = () => {
             <tbody className="divide-y divide-gray-100 font-medium">
               {filteredDocuments.length === 0 ? (
                 <tr><td colSpan={6} className="py-4 px-4 text-center text-gray-500">Tidak ada dokumen.</td></tr>
-              ) : filteredDocuments.map((doc, idx) => {
+              ) : filteredDocuments.map((doc) => {
                 const isCompleted = doc.status === 'selesai';
                 const isError = doc.status === 'error';
                 const progress = isCompleted ? 100 : (isError ? 25 : 50);
@@ -319,7 +319,7 @@ const AnalisisDokumen = () => {
                     </div>
                   </td>
                 </tr>
-              ) : filteredDocuments.map((doc, idx) => {
+              ) : filteredDocuments.map((doc) => {
                 const dateStr = new Date(doc.createdAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
                 const badgeText = doc.klasifikasi === 'rahasia' ? 'Rahasia' : (doc.klasifikasi === 'sangat_rahasia' ? 'Sangat Rahasia' : 'Terbuka');
                 const badgeClass = doc.klasifikasi === 'rahasia' ? 'bg-amber-100 text-amber-800' : (doc.klasifikasi === 'sangat_rahasia' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700');
