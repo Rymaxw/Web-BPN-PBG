@@ -1,4 +1,4 @@
-# DOKUMENTASI TEKNIS SISTEM INFORMASI MANAJEMEN SENGKETA DAN PERKARA (WEB BPN)
+DOKUMENTASI TEKNIS SISTEM INFORMASI MANAJEMEN SENGKETA DAN PERKARA (WEB BPN)
 
 ## 1. PENDAHULUAN
 Dokumen ini merupakan panduan teknis dan rekayasa perangkat lunak dari Sistem Informasi Manajemen Sengketa dan Perkara Pertanahan (Web BPN). Sistem ini dirancang untuk mendigitalisasi proses registrasi, pemantauan status (Service Level Agreement), analisis, dan pengarsipan dokumen hukum di lingkup badan pertanahan.
@@ -172,3 +172,4 @@ Proses pengembangan hingga operasional rilis sistem berjalan melintasi tahapan-t
     *(Peringatan: Verifikasi URL string menggunakan port 5432 khusus migrasi, terbebas dari utilitas pgbouncer Vercel).*
 3.  **Protokol Git:** Eksekusi integrasi komit menuju repositori jarak jauh pada Git (*staging* via `git add`, integrasi via `git commit`, transmisi via `git push`).
 4.  **Otomatisasi Kompilasi Cloud:** Vercel mendeteksi pemicu *push event*, mengakuisisi modul Node, menjalankan fase kompilasi (`vite build`), lalu memperbarui server publik dan modul fungsi API eksekusi (*Lambda Serverless*). Durasi operasi ini memiliki standar toleransi waktu komputasi 1 hingga 3 menit.
+

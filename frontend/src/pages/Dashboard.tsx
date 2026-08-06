@@ -126,7 +126,7 @@ const Dashboard = () => {
 
   const handleUpload = async () => {
     if (!uploadData.noBerkas || !uploadData.judul || !uploadData.lokasi) {
-      alert('Harap isi Nomor Berkas, Nama Pemohon, dan NIK/NIB.');
+      alert('Harap isi Nomor Berkas, Nama Pemohon, dan Lokasi.');
       return;
     }
 
@@ -751,10 +751,10 @@ const Dashboard = () => {
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[11px] font-bold text-gray-800 mb-1">NIK/NIB</label>
+                      <label className="block text-[11px] font-bold text-gray-800 mb-1">Lokasi (Kecamatan)</label>
                       <input 
                         type="text" 
-                        placeholder="16 digit angka" 
+                        placeholder="Contoh: Kec. Bobotsari" 
                         value={uploadData.lokasi} 
                         onChange={(e) => setUploadData({...uploadData, lokasi: e.target.value})} 
                         className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]" 
