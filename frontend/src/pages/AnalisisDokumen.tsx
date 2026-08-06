@@ -114,17 +114,20 @@ const AnalisisDokumen = () => {
 
   const isPerkara = modul === 'perkara';
 
-  const renderSengketa = () => (
+  const renderSengketa = () => {
+    const selesaiCount = documents.filter(d => d.status === 'selesai').length;
+    const prosesCount = documents.filter(d => d.status === 'proses').length;
+    return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
           <div>
-            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">KATEGORI TERBANYAK</p>
-            <h3 className="text-2xl font-bold text-gray-900 mt-1">Batas Lahan</h3>
+            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">TOTAL DOKUMEN SENGKETA</p>
+            <h3 className="text-2xl font-bold text-gray-900 mt-1">{documents.length}</h3>
           </div>
           <p className="text-xs font-semibold text-gray-700 mt-4 flex items-center">
-            <i className="fa-solid fa-chart-line text-xs mr-1.5 text-gray-800"></i>
-            42% dari total sengketa
+            <i className="fa-solid fa-check-circle text-xs mr-1.5 text-emerald-600"></i>
+            {selesaiCount} selesai, {prosesCount} proses
           </p>
         </div>
 
@@ -174,13 +177,13 @@ const AnalisisDokumen = () => {
               ) : filteredDocuments.map((doc, idx) => {
                 const isCompleted = doc.status === 'selesai';
                 const isError = doc.status === 'error';
-                const progress = isCompleted ? 100 : (isError ? 25 : 65);
+                const progress = isCompleted ? 100 : (isError ? 25 : 50);
                 const timeStr = new Date(doc.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
                 return (
                   <tr key={doc.id} className="hover:bg-gray-50 transition">
-                    <td className="py-4 px-4 font-bold text-gray-900">#AN-{8821 - idx}</td>
-                    <td className="py-4 px-4 font-semibold text-gray-700">{doc.noBerkas}</td>
+                    <td className="py-4 px-4 font-bold text-gray-900">{doc.noBerkas}</td>
+                    <td className="py-4 px-4 font-semibold text-gray-700 max-w-[200px] truncate">{doc.judul}</td>
                     <td className="py-4 px-4 text-gray-600">{timeStr}</td>
                     <td className="py-4 px-4">
                       {isCompleted ? (
@@ -211,7 +214,8 @@ const AnalisisDokumen = () => {
         </div>
       </div>
     </>
-  );
+    );
+  };
 
   const renderPerkara = () => (
     <>
@@ -317,11 +321,8 @@ const AnalisisDokumen = () => {
                 </tr>
               ) : filteredDocuments.map((doc, idx) => {
                 const dateStr = new Date(doc.createdAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
-                // Simulate classifications for visual variety
-                let badgeClass = 'bg-blue-100 text-blue-700';
-                let badgeText = 'Terbuka';
-                if (idx % 3 === 0) { badgeClass = 'bg-red-100 text-red-700'; badgeText = 'Sangat Rahasia'; }
-                else if (idx % 3 === 1) { badgeClass = 'bg-amber-100 text-amber-800'; badgeText = 'Rahasia'; }
+                const badgeText = doc.klasifikasi === 'rahasia' ? 'Rahasia' : (doc.klasifikasi === 'sangat_rahasia' ? 'Sangat Rahasia' : 'Terbuka');
+                const badgeClass = doc.klasifikasi === 'rahasia' ? 'bg-amber-100 text-amber-800' : (doc.klasifikasi === 'sangat_rahasia' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700');
 
                 return (
                   <tr key={doc.id} className="hover:bg-gray-50 transition">
@@ -329,7 +330,7 @@ const AnalisisDokumen = () => {
                       <p className="font-bold text-gray-900">{doc.noBerkas}</p>
                       <p className="text-[10px] text-gray-500 mt-0.5">{doc.judul.substring(0, 30)}...</p>
                     </td>
-                    <td className="py-4 px-6 font-semibold text-gray-700">{doc.author.name} vs Instansi</td>
+                    <td className="py-4 px-6 font-semibold text-gray-700">{doc.author.name}</td>
                     <td className="py-4 px-6 text-gray-600">{dateStr}</td>
                     <td className="py-4 px-6 flex items-center justify-end space-x-3">
                       <span className={`font-bold px-3 py-1.5 rounded-md text-[10px] ${badgeClass}`}>

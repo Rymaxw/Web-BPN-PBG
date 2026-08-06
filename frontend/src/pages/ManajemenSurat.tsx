@@ -62,7 +62,7 @@ const ManajemenSurat = () => {
   }
 
   const isCompleted = selectedDoc.status === 'selesai';
-  const progressPercent = isCompleted ? 100 : (selectedDoc.status === 'error' ? 20 : 65);
+  const progressPercent = isCompleted ? 100 : (selectedDoc.status === 'error' ? 20 : 50);
   
   // Dynamic SLA Logic (AI-like prediction based on creation date)
   const createdDate = new Date(selectedDoc.createdAt);
@@ -90,8 +90,22 @@ const ManajemenSurat = () => {
       btnColor: 'bg-emerald-600 hover:bg-emerald-700 text-white',
       title: 'Tepat Waktu (SLA Terpenuhi)',
       desc: `Dokumen telah selesai diproses sebelum batas waktu SLA (${deadlineDate.toLocaleDateString('id-ID')}).`,
-      btnText: 'Arsipkan',
-      btnAction: () => alert('Dokumen telah diarsipkan secara otomatis.')
+      btnText: 'Arsipkan Digital',
+      btnAction: async () => {
+        try {
+          const res = await fetch(`${API_URL}/documents/${selectedDocId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ isArchived: true }),
+          });
+          if (!res.ok) throw new Error('Gagal');
+          // Remove from local list
+          setDocuments(docs => docs.filter(d => d.id !== selectedDocId));
+          alert('Dokumen berhasil dipindahkan ke Arsip Digital!');
+        } catch {
+          alert('Gagal mengarsipkan dokumen.');
+        }
+      }
     };
   } else if (selectedDoc.status === 'error') {
     slaConfig = {
@@ -391,11 +405,7 @@ const ManajemenSurat = () => {
       {/* Kronologi Pergerakan Berkas Table */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
         <div className="flex flex-col md:flex-row justify-between md:items-center items-start gap-3">
-          <h3 className="font-bold text-sm text-gray-900 uppercase tracking-wide">KRONOLOGI PERGERAKAN BERKAS</h3>
-          <div className="relative w-full md:w-72">
-            <input type="text" placeholder="Cari riwayat..." className="w-full bg-gray-100 border border-gray-300 rounded-lg text-xs px-3 py-1.5 pl-8 focus:outline-none" />
-            <i className="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-[10px] text-gray-500"></i>
-          </div>
+          <h3 className="font-bold text-sm text-gray-900 uppercase tracking-wide">RIWAYAT DOKUMEN</h3>
         </div>
 
         <div className="overflow-x-auto">
@@ -404,7 +414,6 @@ const ManajemenSurat = () => {
               <tr>
                 <th className="py-3 px-4">PETUGAS</th>
                 <th className="py-3 px-4">AKSI</th>
-                <th className="py-3 px-4">TUJUAN/UNIT</th>
                 <th className="py-3 px-4">WAKTU & TANGGAL</th>
                 <th className="py-3 px-4 text-center">STATUS</th>
               </tr>
@@ -412,19 +421,17 @@ const ManajemenSurat = () => {
             <tbody className="divide-y divide-gray-200 font-medium">
               <tr className="hover:bg-gray-50 transition">
                 <td className="py-3.5 px-4 font-bold text-gray-900">{selectedDoc.author.name}</td>
-                <td className="py-3.5 px-4">Penerimaan & Registrasi Berkas</td>
-                <td className="py-3.5 px-4">Front Office</td>
-                <td className="py-3.5 px-4 text-gray-600">{new Date(selectedDoc.createdAt).toLocaleDateString('id-ID')}</td>
+                <td className="py-3.5 px-4">Upload & Registrasi Berkas</td>
+                <td className="py-3.5 px-4 text-gray-600">{new Date(selectedDoc.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
                 <td className="py-3.5 px-4 text-center"><span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-3 py-1 rounded uppercase">SELESAI</span></td>
               </tr>
               <tr className="hover:bg-gray-50 transition">
                 <td className="py-3.5 px-4 font-bold text-gray-900">{selectedDoc.author.name}</td>
-                <td className="py-3.5 px-4">Review Berkas</td>
-                <td className="py-3.5 px-4">Supervisor</td>
-                <td className="py-3.5 px-4 text-gray-600">-</td>
+                <td className="py-3.5 px-4">Status terakhir diperbarui</td>
+                <td className="py-3.5 px-4 text-gray-600">{new Date(selectedDoc.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
                 <td className="py-3.5 px-4 text-center">
                   <span className={`text-[10px] font-bold px-3 py-1 rounded uppercase ${isCompleted ? 'bg-emerald-100 text-emerald-800' : (selectedDoc.status === 'error' ? 'bg-red-100 text-red-800' : 'bg-sky-100 text-sky-800')}`}>
-                    {selectedDoc.status}
+                    {selectedDoc.status.toUpperCase()}
                   </span>
                 </td>
               </tr>

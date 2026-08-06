@@ -16,17 +16,20 @@ const router = Router();
 // GET /api/documents - Ambil semua dokumen (dengan filter opsional)
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const { tipe, status } = req.query;
+    const { tipe, status, archived } = req.query;
 
-    const where: Record<string, string> = {};
+    const where: Record<string, any> = {};
     if (tipe) where.tipe = tipe as string;
     if (status) where.status = status as string;
+    // Filter by archived status: 'true' = archived only, default = non-archived
+    where.isArchived = archived === 'true' ? true : false;
 
     const documents = await prisma.document.findMany({
       where,
       select: {
         id: true, noBerkas: true, judul: true, lokasi: true, tipe: true, 
         status: true, klasifikasi: true, keamanan: true, fileUrl: true, 
+        isArchived: true, fileMimeType: true,
         authorId: true, createdAt: true, updatedAt: true,
         author: { select: { id: true, name: true, email: true } }
       },
@@ -200,14 +203,15 @@ router.get('/:id/file', async (req: Request, res: Response) => {
 router.put('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { status, klasifikasi, keamanan, judul, lokasi } = req.body;
+    const { status, klasifikasi, keamanan, judul, lokasi, isArchived } = req.body;
 
-    const updateData: Record<string, string> = {};
+    const updateData: Record<string, any> = {};
     if (status) updateData.status = status;
     if (klasifikasi) updateData.klasifikasi = klasifikasi;
     if (keamanan) updateData.keamanan = keamanan;
     if (judul) updateData.judul = judul;
     if (lokasi) updateData.lokasi = lokasi;
+    if (typeof isArchived === 'boolean') updateData.isArchived = isArchived;
 
     const document = await prisma.document.update({
       where: { id },
@@ -215,6 +219,7 @@ router.put('/:id', async (req: Request, res: Response) => {
       select: {
         id: true, noBerkas: true, judul: true, lokasi: true, tipe: true,
         status: true, klasifikasi: true, keamanan: true, fileUrl: true,
+        isArchived: true, fileMimeType: true,
         authorId: true, createdAt: true, updatedAt: true,
         author: { select: { id: true, name: true, email: true } }
       },
