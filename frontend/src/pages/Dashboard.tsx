@@ -519,39 +519,35 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 font-medium">
-                <tr className="hover:bg-gray-50 transition">
-                  <td className="py-4 px-4">
-                    <p className="font-bold text-gray-900">PRK/2025/0012</p>
-                    <p className="text-[10px] text-gray-500">12 Jul 2025</p>
-                  </td>
-                  <td className="py-4 px-4 text-gray-600">H. Sudirman<br />vs. PT Maju Jaya</td>
-                  <td className="py-4 px-4 text-gray-600">Mediasi</td>
-                  <td className="py-4 px-4 text-center">
-                    <span className="bg-blue-100 text-blue-700 font-bold px-3 py-1.5 rounded-lg text-[10px]">Proses</span>
-                  </td>
-                </tr>
-                <tr className="hover:bg-gray-50 transition">
-                  <td className="py-4 px-4">
-                    <p className="font-bold text-gray-900">PRK/2025/0045</p>
-                    <p className="text-[10px] text-gray-500">15 Jul 2025</p>
-                  </td>
-                  <td className="py-4 px-4 text-gray-600">Siti Aminah vs.<br />Kantor Pertanahan</td>
-                  <td className="py-4 px-4 text-gray-600">Jawaban Tergugat</td>
-                  <td className="py-4 px-4 text-center">
-                    <span className="bg-amber-100 text-amber-700 font-bold px-3 py-1.5 rounded-lg text-[10px]">Menunggu Review</span>
-                  </td>
-                </tr>
-                <tr className="hover:bg-gray-50 transition">
-                  <td className="py-4 px-4">
-                    <p className="font-bold text-gray-900">PRK/2025/1102</p>
-                    <p className="text-[10px] text-gray-500">19 Jul 2025</p>
-                  </td>
-                  <td className="py-4 px-4 text-gray-600">Yayasan Bakti vs.<br />Perorangan</td>
-                  <td className="py-4 px-4 text-gray-600">Sidang Putusan</td>
-                  <td className="py-4 px-4 text-center">
-                    <span className="bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg text-[10px]">Selesai</span>
-                  </td>
-                </tr>
+                {filteredDocs.length === 0 ? (
+                  <tr><td colSpan={4} className="py-4 px-4 text-center text-gray-500">Tidak ada perkara aktif.</td></tr>
+                ) : filteredDocs.map((doc) => {
+                  const dateStr = new Date(doc.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                  let statusLabel = 'Proses';
+                  let statusClass = 'bg-blue-100 text-blue-700';
+                  
+                  if (doc.status === 'selesai') {
+                    statusLabel = 'Selesai';
+                    statusClass = 'bg-emerald-100 text-emerald-700';
+                  } else if (doc.status === 'error') {
+                    statusLabel = 'Menunggu Review';
+                    statusClass = 'bg-amber-100 text-amber-700';
+                  }
+
+                  return (
+                    <tr key={doc.id} className="hover:bg-gray-50 transition">
+                      <td className="py-4 px-4">
+                        <p className="font-bold text-gray-900">{doc.noBerkas}</p>
+                        <p className="text-[10px] text-gray-500">{dateStr}</p>
+                      </td>
+                      <td className="py-4 px-4 text-gray-600 max-w-[200px] truncate">{doc.judul}</td>
+                      <td className="py-4 px-4 text-gray-600">{doc.lokasi}</td>
+                      <td className="py-4 px-4 text-center">
+                        <span className={`${statusClass} font-bold px-3 py-1.5 rounded-lg text-[10px]`}>{statusLabel}</span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
