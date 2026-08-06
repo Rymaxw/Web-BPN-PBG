@@ -489,13 +489,6 @@ const AnalisisDokumen = () => {
                   </div>
                 </div>
 
-                <div className="bg-blue-50 rounded-lg p-3 flex items-start space-x-3 border border-blue-100">
-                  <div className="mt-0.5"><i className="fa-solid fa-shield text-[#190c4d]"></i></div>
-                  <div>
-                    <p className="text-[10px] font-bold text-[#190c4d] uppercase">CLASSIFIED INTERNAL</p>
-                    <p className="text-[9px] text-[#190c4d] mt-0.5 font-medium">Laporan akan dilindungi password dan tercatat dalam log audit.</p>
-                  </div>
-                </div>
               </div>
               
               <div className="px-6 py-4 bg-white border-t border-gray-100 flex justify-center space-x-3 shrink-0">

@@ -112,11 +112,33 @@ router.get('/global-stats', async (req: Request, res: Response) => {
     const perkaraCount = await prisma.document.count({ where: { tipe: 'perkara' } });
     const perkaraProses = await prisma.document.count({ where: { tipe: 'perkara', status: 'proses' } });
     
-    // Simulate trend based on created data (for now using raw query or simple counts)
-    const trend = {
-      sengketa: [12, 19, 15, 10, 22],
-      perkara: [5, 8, 12, 6, 15]
-    };
+    // Get the last 5 days including today
+    const dates = Array.from({ length: 5 }).map((_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (4 - i));
+      return d;
+    });
+
+    const trend = { sengketa: [0,0,0,0,0], perkara: [0,0,0,0,0] };
+
+    // Fetch all documents from the last 5 days
+    const fiveDaysAgo = new Date();
+    fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
+    
+    const recentDocs = await prisma.document.findMany({
+      where: { createdAt: { gte: fiveDaysAgo } },
+      select: { tipe: true, createdAt: true }
+    });
+
+    recentDocs.forEach(doc => {
+      const docDate = new Date(doc.createdAt).setHours(0,0,0,0);
+      dates.forEach((date, i) => {
+        if (date.setHours(0,0,0,0) === docDate) {
+          if (doc.tipe === 'sengketa') trend.sengketa[i]++;
+          else if (doc.tipe === 'perkara') trend.perkara[i]++;
+        }
+      });
+    });
 
     res.json({ sengketaCount, sengketaSelesai, perkaraCount, perkaraProses, trend });
   } catch (error) {

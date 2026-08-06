@@ -319,13 +319,16 @@ const Dashboard = () => {
           <h3 className="font-bold text-xs text-gray-900 uppercase tracking-wide mb-4">DISTRIBUSI BEBAN KERJA</h3>
           <div className="flex-1 flex justify-center items-center min-h-[150px] mb-4">
             <div className="w-40 h-40">
-              <Doughnut
-                data={{
-                  labels: ['Sengketa', 'Perkara'],
-                  datasets: [{
-                    data: [globalStats.sengketaCount, globalStats.perkaraCount],
-                    backgroundColor: ['#190c4d', '#f59e0b'],
-                    borderWidth: 0,
+              {(() => {
+                const total = globalStats.sengketaCount + globalStats.perkaraCount;
+                return (
+                  <Doughnut
+                    data={{
+                      labels: total > 0 ? ['Sengketa', 'Perkara'] : ['Belum ada data'],
+                      datasets: [{
+                        data: total > 0 ? [globalStats.sengketaCount, globalStats.perkaraCount] : [1],
+                        backgroundColor: total > 0 ? ['#190c4d', '#f59e0b'] : ['#e5e7eb'],
+                        borderWidth: 0,
                     hoverOffset: 4
                   }]
                 }}
@@ -338,20 +341,30 @@ const Dashboard = () => {
                 }}
               />
             </div>
+            </div>
           </div>
           <div className="space-y-2 text-xs">
-            <div className="flex justify-between items-center">
-              <span className="flex items-center text-gray-700 font-medium">
-                <span className="w-3 h-3 bg-[#190c4d] inline-block mr-2 rounded-sm"></span> Sengketa
-              </span>
-              <span className="font-bold text-gray-900">70%</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="flex items-center text-gray-700 font-medium">
-                <span className="w-3 h-3 bg-[#f59e0b] inline-block mr-2 rounded-sm"></span> Perkara
-              </span>
-              <span className="font-bold text-gray-900">30%</span>
-            </div>
+            {(() => {
+              const total = globalStats.sengketaCount + globalStats.perkaraCount;
+              const pSengketa = total > 0 ? Math.round((globalStats.sengketaCount / total) * 100) : 0;
+              const pPerkara = total > 0 ? 100 - pSengketa : 0;
+              return (
+                <>
+                  <div className="flex justify-between items-center">
+                    <span className="flex items-center text-gray-700 font-medium">
+                      <span className="w-3 h-3 bg-[#190c4d] inline-block mr-2 rounded-sm"></span> Sengketa
+                    </span>
+                    <span className="font-bold text-gray-900">{pSengketa}%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="flex items-center text-gray-700 font-medium">
+                      <span className="w-3 h-3 bg-[#f59e0b] inline-block mr-2 rounded-sm"></span> Perkara
+                    </span>
+                    <span className="font-bold text-gray-900">{pPerkara}%</span>
+                  </div>
+                </>
+              );
+            })()}
           </div>
         </div>
 
