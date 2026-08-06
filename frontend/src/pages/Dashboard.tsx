@@ -162,7 +162,7 @@ const Dashboard = () => {
 
       if (res.ok) {
         setShowUploadModal(false);
-        setUploadData({ noBerkas: '', judul: '', lokasi: '', keamanan: 'internal', klasifikasi: 'Sengketa Batas Lahan' });
+        setUploadData({ noBerkas: '', judul: '', nik: '', lokasi: '', deadline: '', keamanan: 'internal', klasifikasi: 'Sengketa Batas Lahan' });
         setSelectedFile(null);
         fetchData();
       } else {
