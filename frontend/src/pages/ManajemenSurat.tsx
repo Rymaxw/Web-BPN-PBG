@@ -6,7 +6,9 @@ interface DocItem {
   id: string;
   noBerkas: string;
   judul: string;
+  nik: string;
   lokasi: string;
+  deadline?: string;
   tipe: string;
   status: string;
   klasifikasi: string;
@@ -66,7 +68,7 @@ const ManajemenSurat = () => {
   
   // Dynamic SLA Logic (AI-like prediction based on creation date)
   const createdDate = new Date(selectedDoc.createdAt);
-  const deadlineDate = new Date(createdDate.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days SLA
+  const deadlineDate = selectedDoc.deadline ? new Date(selectedDoc.deadline) : new Date(createdDate.getTime() + 14 * 24 * 60 * 60 * 1000); // Gunakan custom deadline atau fallback 14 hari
   const now = new Date();
   const diffTime = deadlineDate.getTime() - now.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -368,6 +370,10 @@ const ManajemenSurat = () => {
             <div>
               <p className="text-[10px] font-bold text-gray-800 uppercase tracking-wide">PERIHAL</p>
               <p className="text-xs font-medium text-gray-900 mt-0.5 leading-snug">{selectedDoc.judul}</p>
+            </div>
+            <div>
+              <p className="text-[10px] font-bold text-gray-800 uppercase tracking-wide">NIK/NIB PEMOHON</p>
+              <p className="text-xs font-bold text-gray-900 mt-0.5">{selectedDoc.nik || '-'}</p>
             </div>
             <div className="grid grid-cols-2 gap-2 pt-1">
               <div>

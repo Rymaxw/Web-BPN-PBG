@@ -27,7 +27,9 @@ interface DocItem {
   id: string;
   noBerkas: string;
   judul: string;
+  nik: string;
   lokasi: string;
+  deadline?: string;
   tipe: string;
   status: string;
   klasifikasi: string;
@@ -55,9 +57,9 @@ const Dashboard = () => {
   const [modul, setModul] = useState('sengketa');
   const [documents, setDocuments] = useState<DocItem[]>([]);
   const [stats, setStats] = useState<Stats>({ total: 0, proses: 0, selesai: 0, error: 0 });
-  const [globalStats, setGlobalStats] = useState<GlobalStats>({ 
-    sengketaCount: 0, sengketaSelesai: 0, perkaraCount: 0, perkaraProses: 0, 
-    trend: { sengketa: [0,0,0,0,0], perkara: [0,0,0,0,0] }
+  const [globalStats, setGlobalStats] = useState<GlobalStats>({
+    sengketaCount: 0, sengketaSelesai: 0, perkaraCount: 0, perkaraProses: 0,
+    trend: { sengketa: [0, 0, 0, 0, 0], perkara: [0, 0, 0, 0, 0] }
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [showExportModal, setShowExportModal] = useState(false);
@@ -70,7 +72,7 @@ const Dashboard = () => {
   const [showJadwalModal, setShowJadwalModal] = useState(false);
   const [editingJadwal, setEditingJadwal] = useState({ id: 0, date: '', location: '', detail: '' });
 
-  const [uploadData, setUploadData] = useState({ noBerkas: '', judul: '', lokasi: '', keamanan: 'internal', klasifikasi: 'Sengketa Batas Lahan' });
+  const [uploadData, setUploadData] = useState({ noBerkas: '', judul: '', nik: '', lokasi: '', deadline: '', keamanan: 'internal', klasifikasi: 'Sengketa Batas Lahan' });
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -125,8 +127,8 @@ const Dashboard = () => {
   };
 
   const handleUpload = async () => {
-    if (!uploadData.noBerkas || !uploadData.judul || !uploadData.lokasi) {
-      alert('Harap isi Nomor Berkas, Nama Pemohon, dan Lokasi.');
+    if (!uploadData.noBerkas || !uploadData.judul || !uploadData.nik || !uploadData.lokasi || !uploadData.deadline) {
+      alert('Harap isi Nomor Berkas, Nama Pemohon, NIK/NIB, Lokasi, dan Tenggat Waktu (SLA).');
       return;
     }
 
@@ -141,7 +143,9 @@ const Dashboard = () => {
       const formData = new FormData();
       formData.append('noBerkas', uploadData.noBerkas);
       formData.append('judul', uploadData.judul);
+      formData.append('nik', uploadData.nik);
       formData.append('lokasi', uploadData.lokasi);
+      formData.append('deadline', uploadData.deadline);
       formData.append('keamanan', uploadData.keamanan);
       formData.append('klasifikasi', uploadData.klasifikasi);
       formData.append('tipe', modul);
@@ -198,8 +202,8 @@ const Dashboard = () => {
 
         <div className="flex flex-wrap items-center gap-2 md:space-x-3 relative">
           <div className="relative">
-            <input 
-              type="date" 
+            <input
+              type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
               className="bg-white border border-gray-300 text-xs font-semibold px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-50 transition shadow-sm cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#190c4d]"
@@ -326,17 +330,17 @@ const Dashboard = () => {
                         data: total > 0 ? [globalStats.sengketaCount, globalStats.perkaraCount] : [1],
                         backgroundColor: total > 0 ? ['#190c4d', '#f59e0b'] : ['#e5e7eb'],
                         borderWidth: 0,
-                    hoverOffset: 4
-                  }]
-                }}
-                options={{
-                  cutout: '75%',
-                  plugins: {
-                    legend: { display: false },
-                    tooltip: { enabled: true }
-                  }
-                }}
-              />
+                        hoverOffset: 4
+                      }]
+                    }}
+                    options={{
+                      cutout: '75%',
+                      plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: true }
+                      }
+                    }}
+                  />
                 );
               })()}
             </div>
@@ -434,8 +438,8 @@ const Dashboard = () => {
 
         <div className="flex flex-wrap items-center gap-2 relative">
           <div className="relative">
-            <input 
-              type="date" 
+            <input
+              type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
               className="bg-white border border-gray-300 text-xs font-semibold px-3 py-1.5 rounded-lg text-gray-700 hover:bg-gray-50 transition shadow-sm cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#190c4d]"
@@ -522,7 +526,7 @@ const Dashboard = () => {
                   const dateStr = new Date(doc.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
                   let statusLabel = 'Proses';
                   let statusClass = 'bg-blue-100 text-blue-700';
-                  
+
                   if (doc.status === 'selesai') {
                     statusLabel = 'Selesai';
                     statusClass = 'bg-emerald-100 text-emerald-700';
@@ -571,15 +575,15 @@ const Dashboard = () => {
                   if (!l) return;
                   lokasiCounts[l] = (lokasiCounts[l] || 0) + 1;
                 });
-                
+
                 const sortedLokasi = Object.entries(lokasiCounts).sort((a, b) => b[1] - a[1]).slice(0, 3);
-                
+
                 if (sortedLokasi.length === 0) {
-                   return <div className="text-center text-xs text-gray-500 py-4">Belum ada data distribusi wilayah</div>;
+                  return <div className="text-center text-xs text-gray-500 py-4">Belum ada data distribusi wilayah</div>;
                 }
-                
+
                 const colors = ['bg-[#8c7349]', 'bg-blue-600', 'bg-gray-400'];
-                
+
                 return sortedLokasi.map(([nama, jumlah], idx) => (
                   <div key={nama} className="flex justify-between items-center text-xs font-semibold">
                     <span className="flex items-center text-gray-700">
@@ -596,7 +600,7 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-bold text-sm text-gray-900 uppercase tracking-wide">PANGGILAN SIDANG MENDATANG</h3>
-              <button 
+              <button
                 onClick={() => setShowJadwalModal(true)}
                 className="text-gray-400 hover:text-[#190c4d] transition cursor-pointer"
                 title="Edit Jadwal Sidang"
@@ -647,8 +651,8 @@ const Dashboard = () => {
               </div>
               <div className="p-6 space-y-4 bg-white">
                 <label className="block text-[10px] font-bold text-gray-900 uppercase tracking-wide mb-3">PILIH FORMAT LAPORAN</label>
-                
-                <div 
+
+                <div
                   onClick={() => setExportFormat('pdf')}
                   className={`border ${exportFormat === 'pdf' ? 'border-[#190c4d] ring-1 ring-[#190c4d] bg-gray-50' : 'border-gray-200 hover:border-gray-300'} rounded-lg p-4 cursor-pointer flex items-center space-x-4 transition`}
                 >
@@ -659,7 +663,7 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                <div 
+                <div
                   onClick={() => setExportFormat('word')}
                   className={`border ${exportFormat === 'word' ? 'border-[#190c4d] ring-2 ring-[#190c4d] bg-gray-100 shadow-sm' : 'border-gray-200 hover:border-gray-300'} rounded-lg p-4 cursor-pointer flex items-center space-x-4 transition`}
                 >
@@ -670,7 +674,7 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                <div 
+                <div
                   onClick={() => setExportFormat('excel')}
                   className={`border ${exportFormat === 'excel' ? 'border-[#190c4d] ring-1 ring-[#190c4d] bg-gray-50' : 'border-gray-200 hover:border-gray-300'} rounded-lg p-4 cursor-pointer flex items-center space-x-4 transition`}
                 >
@@ -686,7 +690,7 @@ const Dashboard = () => {
                   <p className="text-[10px] text-gray-800 leading-relaxed font-medium">Dokumen ini bersifat RAHASIA. Pengunduhan laporan akan dicatat dalam log sistem keamanan Kantah Purbalingga.</p>
                 </div>
               </div>
-              
+
               <div className="px-6 py-4 bg-gray-100 border-t border-gray-200 flex justify-end space-x-2">
                 <button onClick={() => setShowExportModal(false)} className="px-6 py-2.5 text-xs font-bold text-gray-700 bg-gray-200 hover:bg-gray-300 border border-gray-300 rounded-lg transition cursor-pointer">Batal</button>
                 <button onClick={executeExport} className="px-6 py-2.5 text-xs font-bold text-white bg-[#190c4d] hover:bg-indigo-950 rounded-lg transition flex items-center space-x-2 cursor-pointer shadow-md">
@@ -710,7 +714,7 @@ const Dashboard = () => {
                 </div>
                 <button onClick={() => { setShowUploadModal(false); setSelectedFile(null); }} className="text-gray-400 hover:text-gray-600 cursor-pointer text-lg"><i className="fa-solid fa-xmark"></i></button>
               </div>
-              
+
               <div className="p-6 space-y-6 overflow-y-auto bg-white flex-1">
                 {/* IDENTITAS BERKAS */}
                 <div className="space-y-4">
@@ -718,12 +722,12 @@ const Dashboard = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[11px] font-bold text-gray-800 mb-1">Nomor Berkas</label>
-                      <input 
-                        type="text" 
-                        placeholder="Contoh : B-2025-IX-0000" 
-                        value={uploadData.noBerkas} 
-                        onChange={(e) => setUploadData({...uploadData, noBerkas: e.target.value})} 
-                        className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]" 
+                      <input
+                        type="text"
+                        placeholder="Contoh : B-2025-IX-0000"
+                        value={uploadData.noBerkas}
+                        onChange={(e) => setUploadData({ ...uploadData, noBerkas: e.target.value })}
+                        className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]"
                       />
                     </div>
                     <div>
@@ -741,40 +745,62 @@ const Dashboard = () => {
                   <h4 className="text-[10px] font-bold text-[#190c4d] uppercase tracking-wider">INFORMASI PEMOHON</h4>
                   <div>
                     <label className="block text-[11px] font-bold text-gray-800 mb-1">Nama Pemohon/Institusi</label>
-                    <input 
-                      type="text" 
-                      placeholder="Masukkan Nama Lengkap" 
-                      value={uploadData.judul} 
-                      onChange={(e) => setUploadData({...uploadData, judul: e.target.value})} 
-                      className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]" 
+                    <input
+                      type="text"
+                      placeholder="Masukkan Nama Lengkap"
+                      value={uploadData.judul}
+                      onChange={(e) => setUploadData({ ...uploadData, judul: e.target.value })}
+                      className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]"
                     />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[11px] font-bold text-gray-800 mb-1">Lokasi (Kecamatan)</label>
-                      <input 
-                        type="text" 
-                        placeholder="Contoh: Kec. Bobotsari" 
-                        value={uploadData.lokasi} 
-                        onChange={(e) => setUploadData({...uploadData, lokasi: e.target.value})} 
-                        className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]" 
+                      <label className="block text-[11px] font-bold text-gray-800 mb-1">NIK/NIB</label>
+                      <input
+                        type="text"
+                        placeholder="16 digit angka"
+                        value={uploadData.nik}
+                        onChange={(e) => setUploadData({ ...uploadData, nik: e.target.value })}
+                        className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]"
                       />
                     </div>
                     <div>
+                      <label className="block text-[11px] font-bold text-gray-800 mb-1">Lokasi (Kecamatan)</label>
+                      <input
+                        type="text"
+                        placeholder="Contoh: Kec. Bobotsari"
+                        value={uploadData.lokasi}
+                        onChange={(e) => setUploadData({ ...uploadData, lokasi: e.target.value })}
+                        className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
                       <label className="block text-[11px] font-bold text-gray-800 mb-1">Subjek Sengketa</label>
                       <div className="relative">
-                        <select 
-                          value={uploadData.klasifikasi || 'Sengketa Batas Lahan'} 
-                          onChange={(e) => setUploadData({...uploadData, klasifikasi: e.target.value})} 
+                        <select
+                          value={uploadData.klasifikasi || 'Sengketa Batas Lahan'}
+                          onChange={(e) => setUploadData({ ...uploadData, klasifikasi: e.target.value })}
                           className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d] appearance-none cursor-pointer"
                         >
                           <option value="Sengketa Batas Lahan">Sengketa Batas Lahan</option>
-                          <option value="Sengketa Waris Tanah">Sengketa Waris Tanah</option>
-                          <option value="Sertifikat Ganda">Sertifikat Ganda</option>
-                          <option value="Sengketa Kepemilikan Hak">Sengketa Kepemilikan Hak</option>
+                          <option value="Sengketa Hak Milik">Sengketa Hak Milik</option>
+                          <option value="Perkara Tata Usaha">Perkara Tata Usaha</option>
+                          <option value="Sengketa Waris">Sengketa Waris</option>
+                          <option value="Konflik Agraria">Konflik Agraria</option>
                         </select>
-                        <i className="fa-solid fa-chevron-down absolute right-3 top-2.5 text-gray-400 text-[10px] pointer-events-none"></i>
+                        <i className="fa-solid fa-chevron-down absolute right-3 top-2.5 text-gray-400 text-[10px]"></i>
                       </div>
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-bold text-gray-800 mb-1">Tenggat Waktu SLA</label>
+                      <input
+                        type="date"
+                        value={uploadData.deadline}
+                        onChange={(e) => setUploadData({ ...uploadData, deadline: e.target.value })}
+                        className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#190c4d]"
+                      />
                     </div>
                   </div>
                 </div>
@@ -808,9 +834,9 @@ const Dashboard = () => {
                     <p className="text-[9px] text-[#190c4d] mt-0.5 font-medium">Enkripsi AES-256 diterapkan pada seluruh berkas yang diunggah.</p>
                   </div>
                 </div>
-                
+
               </div>
-              
+
               <div className="px-6 py-4 bg-white border-t border-gray-100 flex justify-center space-x-3 shrink-0">
                 <button onClick={() => { setShowUploadModal(false); setSelectedFile(null); }} className="px-6 py-2.5 text-xs font-bold text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 rounded-lg transition cursor-pointer shadow-sm">Batal</button>
                 <button onClick={handleUpload} disabled={isUploading} className={`px-6 py-2.5 text-xs font-bold text-white rounded-lg transition shadow-md cursor-pointer ${isUploading ? 'bg-gray-400' : 'bg-[#190c4d] hover:bg-indigo-950'}`}>
@@ -833,23 +859,23 @@ const Dashboard = () => {
                 </div>
                 <button onClick={() => setShowJadwalModal(false)} className="text-gray-400 hover:text-gray-600 cursor-pointer"><i className="fa-solid fa-xmark"></i></button>
               </div>
-              
+
               <div className="p-6 overflow-y-auto space-y-4 flex-1">
                 <div className="bg-sky-50 rounded-lg p-4 border border-sky-100">
                   <h4 className="text-xs font-bold text-sky-900 mb-3">{editingJadwal.id ? 'Edit Jadwal' : 'Tambah Jadwal Baru'}</h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                     <div>
                       <label className="block text-[10px] font-bold text-gray-700 mb-1">Tanggal (Contoh: 16 Jul)</label>
-                      <input type="text" value={editingJadwal.date} onChange={(e) => setEditingJadwal({...editingJadwal, date: e.target.value})} className="w-full bg-white border border-gray-300 rounded px-3 py-1.5 text-xs focus:outline-none focus:border-[#190c4d]" />
+                      <input type="text" value={editingJadwal.date} onChange={(e) => setEditingJadwal({ ...editingJadwal, date: e.target.value })} className="w-full bg-white border border-gray-300 rounded px-3 py-1.5 text-xs focus:outline-none focus:border-[#190c4d]" />
                     </div>
                     <div>
                       <label className="block text-[10px] font-bold text-gray-700 mb-1">Lokasi (Pengadilan)</label>
-                      <input type="text" value={editingJadwal.location} onChange={(e) => setEditingJadwal({...editingJadwal, location: e.target.value})} className="w-full bg-white border border-gray-300 rounded px-3 py-1.5 text-xs focus:outline-none focus:border-[#190c4d]" />
+                      <input type="text" value={editingJadwal.location} onChange={(e) => setEditingJadwal({ ...editingJadwal, location: e.target.value })} className="w-full bg-white border border-gray-300 rounded px-3 py-1.5 text-xs focus:outline-none focus:border-[#190c4d]" />
                     </div>
                   </div>
                   <div>
                     <label className="block text-[10px] font-bold text-gray-700 mb-1">Detail (Waktu & No Perkara)</label>
-                    <input type="text" value={editingJadwal.detail} onChange={(e) => setEditingJadwal({...editingJadwal, detail: e.target.value})} className="w-full bg-white border border-gray-300 rounded px-3 py-1.5 text-xs focus:outline-none focus:border-[#190c4d]" placeholder="pukul 09.00 WIB - Perkara #0012" />
+                    <input type="text" value={editingJadwal.detail} onChange={(e) => setEditingJadwal({ ...editingJadwal, detail: e.target.value })} className="w-full bg-white border border-gray-300 rounded px-3 py-1.5 text-xs focus:outline-none focus:border-[#190c4d]" placeholder="pukul 09.00 WIB - Perkara #0012" />
                   </div>
                   <div className="mt-3 flex justify-end space-x-2">
                     <button onClick={() => setEditingJadwal({ id: 0, date: '', location: '', detail: '' })} className="px-3 py-1.5 text-[10px] font-bold text-gray-600 border border-gray-300 rounded cursor-pointer hover:bg-gray-100">Batal</button>

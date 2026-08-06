@@ -6,6 +6,7 @@ interface DocItem {
   id: string;
   noBerkas: string;
   judul: string;
+  nik: string;
   lokasi: string;
   tipe: string;
   status: string;

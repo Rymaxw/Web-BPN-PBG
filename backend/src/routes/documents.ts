@@ -27,8 +27,8 @@ router.get('/', async (req: Request, res: Response) => {
     const documents = await prisma.document.findMany({
       where,
       select: {
-        id: true, noBerkas: true, judul: true, lokasi: true, tipe: true, 
-        status: true, klasifikasi: true, keamanan: true, fileUrl: true, 
+        id: true, noBerkas: true, judul: true, nik: true, lokasi: true, tipe: true, 
+        deadline: true, status: true, klasifikasi: true, keamanan: true, fileUrl: true, 
         isArchived: true, fileMimeType: true,
         authorId: true, createdAt: true, updatedAt: true,
         author: { select: { id: true, name: true, email: true } }
@@ -46,7 +46,7 @@ router.get('/', async (req: Request, res: Response) => {
 // POST /api/documents - Buat dokumen baru
 router.post('/', upload.single('file'), async (req: Request, res: Response) => {
   try {
-    const { noBerkas, judul, lokasi, tipe, status, klasifikasi, keamanan, authorId } = req.body;
+    const { noBerkas, judul, nik, lokasi, deadline, tipe, status, klasifikasi, keamanan, authorId } = req.body;
 
     if (!noBerkas || !tipe || !authorId) {
       res.status(400).json({ error: 'noBerkas, tipe, dan authorId wajib diisi.' });
@@ -64,7 +64,7 @@ router.post('/', upload.single('file'), async (req: Request, res: Response) => {
 
     const document = await prisma.document.create({
       data: { 
-        noBerkas, judul, lokasi, tipe, status, klasifikasi, keamanan, authorId, 
+        noBerkas, judul, nik, lokasi, deadline: deadline ? new Date(deadline) : null, tipe, status, klasifikasi, keamanan, authorId, 
         fileData, fileMimeType, fileUrl 
       },
     });
@@ -163,9 +163,9 @@ router.get('/export', async (req: Request, res: Response) => {
     });
 
     // Generate CSV
-    const header = 'No,No Berkas,Judul,Lokasi,Tipe,Status,Klasifikasi,Keamanan,Petugas,Tanggal';
+    const header = 'No,No Berkas,Judul,NIK/NIB,Lokasi,Tipe,Status,Klasifikasi,Keamanan,Petugas,Tanggal';
     const rows = documents.map((doc, i) =>
-      `${i + 1},"${doc.noBerkas}","${doc.judul}","${doc.lokasi}","${doc.tipe}","${doc.status}","${doc.klasifikasi}","${doc.keamanan}","${doc.author.name}","${doc.createdAt.toISOString().split('T')[0]}"`
+      `${i + 1},"${doc.noBerkas}","${doc.judul}","${doc.nik || '-'}","${doc.lokasi}","${doc.tipe}","${doc.status}","${doc.klasifikasi}","${doc.keamanan}","${doc.author.name}","${doc.createdAt.toISOString().split('T')[0]}"`
     );
     const csv = [header, ...rows].join('\n');
 
@@ -203,21 +203,23 @@ router.get('/:id/file', async (req: Request, res: Response) => {
 router.put('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { status, klasifikasi, keamanan, judul, lokasi, isArchived } = req.body;
+    const { status, klasifikasi, keamanan, judul, nik, lokasi, deadline, isArchived } = req.body;
 
     const updateData: Record<string, any> = {};
     if (status) updateData.status = status;
     if (klasifikasi) updateData.klasifikasi = klasifikasi;
     if (keamanan) updateData.keamanan = keamanan;
     if (judul) updateData.judul = judul;
+    if (nik !== undefined) updateData.nik = nik;
     if (lokasi) updateData.lokasi = lokasi;
+    if (deadline) updateData.deadline = new Date(deadline);
     if (typeof isArchived === 'boolean') updateData.isArchived = isArchived;
 
     const document = await prisma.document.update({
       where: { id },
       data: updateData,
       select: {
-        id: true, noBerkas: true, judul: true, lokasi: true, tipe: true,
+        id: true, noBerkas: true, judul: true, nik: true, lokasi: true, deadline: true, tipe: true,
         status: true, klasifikasi: true, keamanan: true, fileUrl: true,
         isArchived: true, fileMimeType: true,
         authorId: true, createdAt: true, updatedAt: true,

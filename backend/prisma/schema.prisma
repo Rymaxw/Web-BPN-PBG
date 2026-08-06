@@ -21,7 +21,9 @@ model Document {
   id          String   @id @default(uuid())
   noBerkas    String   @unique
   judul       String   @default("")
+  nik         String   @default("")
   lokasi      String   @default("")
+  deadline    DateTime?
   tipe        String   // "sengketa" atau "perkara"
   status      String   @default("proses") // "proses", "selesai", "error"
   klasifikasi String   @default("terbuka")
