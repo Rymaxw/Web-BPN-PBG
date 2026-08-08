@@ -315,7 +315,7 @@ const Dashboard = () => {
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
           <h3 className="font-bold text-xs text-gray-900 uppercase tracking-wide mb-4">DISTRIBUSI BEBAN KERJA</h3>
           <div className="flex-1 flex justify-center items-center min-h-[150px] mb-4">
@@ -368,20 +368,6 @@ const Dashboard = () => {
               );
             })()}
           </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
-          <h3 className="font-bold text-xs text-gray-900 uppercase tracking-wide">STATUS ANTREAN</h3>
-          <div>
-            <div className="flex justify-between text-xs font-medium mb-1">
-              <span className="text-gray-700">Penyelesaian Sengketa</span>
-              <span className="font-bold text-gray-900">{globalStats.sengketaCount > 0 ? Math.round((globalStats.sengketaSelesai / globalStats.sengketaCount) * 100) : 0}%</span>
-            </div>
-            <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
-              <div className="bg-[#190c4d] h-2 rounded-full transition-all" style={{ width: `${globalStats.sengketaCount > 0 ? (globalStats.sengketaSelesai / globalStats.sengketaCount) * 100 : 0}%` }}></div>
-            </div>
-          </div>
-
         </div>
 
         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
