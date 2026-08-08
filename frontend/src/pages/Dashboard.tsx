@@ -70,7 +70,7 @@ const Dashboard = () => {
   // Jadwal Sidang state
   const [jadwalSidang, setJadwalSidang] = useState<any[]>([]);
   const [showJadwalModal, setShowJadwalModal] = useState(false);
-  const [editingJadwal, setEditingJadwal] = useState({ id: 0, date: '', location: '', detail: '' });
+  const [editingJadwal, setEditingJadwal] = useState({ id: 0, date: '', location: '', agenda: '', noPerkara: '' });
 
   const [uploadData, setUploadData] = useState({ noBerkas: '', judul: '', nik: '', lokasi: '', deadline: '', keamanan: 'internal', klasifikasi: 'Sengketa Batas Lahan' });
   const [isUploading, setIsUploading] = useState(false);
@@ -381,15 +381,7 @@ const Dashboard = () => {
               <div className="bg-[#190c4d] h-2 rounded-full transition-all" style={{ width: `${globalStats.sengketaCount > 0 ? (globalStats.sengketaSelesai / globalStats.sengketaCount) * 100 : 0}%` }}></div>
             </div>
           </div>
-          <div>
-            <div className="flex justify-between text-xs font-medium mb-1">
-              <span className="text-gray-700">Progres Perkara</span>
-              <span className="font-bold text-gray-900">{globalStats.perkaraCount > 0 ? Math.round((globalStats.perkaraProses / globalStats.perkaraCount) * 100) : 0}%</span>
-            </div>
-            <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
-              <div className="bg-[#f59e0b] h-2 rounded-full transition-all" style={{ width: `${globalStats.perkaraCount > 0 ? (globalStats.perkaraProses / globalStats.perkaraCount) * 100 : 0}%` }}></div>
-            </div>
-          </div>
+
         </div>
 
         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
@@ -619,7 +611,7 @@ const Dashboard = () => {
                   </div>
                   <div className="pl-4">
                     <p className="text-xs font-bold text-gray-900">{jadwal.location}</p>
-                    <p className="text-[10px] text-gray-500 mt-0.5">{jadwal.detail}</p>
+                    <p className="text-[10px] text-gray-500 mt-0.5"><span className="font-semibold text-gray-700">Agenda:</span> {jadwal.agenda} | <span className="font-semibold text-gray-700">No. Perkara:</span> {jadwal.noPerkara}</p>
                   </div>
                 </div>
               ))}
@@ -874,11 +866,15 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-[10px] font-bold text-gray-700 mb-1">Detail (Waktu & No Perkara)</label>
-                    <input type="text" value={editingJadwal.detail} onChange={(e) => setEditingJadwal({ ...editingJadwal, detail: e.target.value })} className="w-full bg-white border border-gray-300 rounded px-3 py-1.5 text-xs focus:outline-none focus:border-[#190c4d]" placeholder="pukul 09.00 WIB - Perkara #0012" />
+                    <label className="block text-[10px] font-bold text-gray-700 mb-1">Agenda</label>
+                    <input type="text" value={editingJadwal.agenda} onChange={(e) => setEditingJadwal({ ...editingJadwal, agenda: e.target.value })} className="w-full bg-white border border-gray-300 rounded px-3 py-1.5 text-xs focus:outline-none focus:border-[#190c4d]" placeholder="Isi agenda sidang secara manual" />
+                  </div>
+                  <div className="mt-3">
+                    <label className="block text-[10px] font-bold text-gray-700 mb-1">Nomor Perkara</label>
+                    <input type="text" value={editingJadwal.noPerkara} onChange={(e) => setEditingJadwal({ ...editingJadwal, noPerkara: e.target.value })} className="w-full bg-white border border-gray-300 rounded px-3 py-1.5 text-xs focus:outline-none focus:border-[#190c4d]" placeholder="Contoh: Perkara #0012" />
                   </div>
                   <div className="mt-3 flex justify-end space-x-2">
-                    <button onClick={() => setEditingJadwal({ id: 0, date: '', location: '', detail: '' })} className="px-3 py-1.5 text-[10px] font-bold text-gray-600 border border-gray-300 rounded cursor-pointer hover:bg-gray-100">Batal</button>
+                    <button onClick={() => setEditingJadwal({ id: 0, date: '', location: '', agenda: '', noPerkara: '' })} className="px-3 py-1.5 text-[10px] font-bold text-gray-600 border border-gray-300 rounded cursor-pointer hover:bg-gray-100">Batal</button>
                     <button onClick={() => {
                       if (!editingJadwal.date || !editingJadwal.location) return;
                       if (editingJadwal.id) {
@@ -886,7 +882,7 @@ const Dashboard = () => {
                       } else {
                         setJadwalSidang([...jadwalSidang, { ...editingJadwal, id: Date.now() }]);
                       }
-                      setEditingJadwal({ id: 0, date: '', location: '', detail: '' });
+                      setEditingJadwal({ id: 0, date: '', location: '', agenda: '', noPerkara: '' });
                     }} className="px-3 py-1.5 text-[10px] font-bold text-white bg-[#190c4d] rounded cursor-pointer hover:bg-indigo-950">Simpan Jadwal</button>
                   </div>
                 </div>
@@ -897,7 +893,7 @@ const Dashboard = () => {
                     <div key={jadwal.id} className="flex justify-between items-center bg-gray-50 border border-gray-200 rounded p-3">
                       <div>
                         <p className="text-xs font-bold text-gray-900">{jadwal.date} - {jadwal.location}</p>
-                        <p className="text-[10px] text-gray-500">{jadwal.detail}</p>
+                        <p className="text-[10px] text-gray-500"><span className="font-semibold text-gray-700">Agenda:</span> {jadwal.agenda} | <span className="font-semibold text-gray-700">No. Perkara:</span> {jadwal.noPerkara}</p>
                       </div>
                       <div className="flex space-x-2">
                         <button onClick={() => setEditingJadwal(jadwal)} className="text-blue-500 hover:text-blue-700 p-1 cursor-pointer"><i className="fa-solid fa-edit text-xs"></i></button>

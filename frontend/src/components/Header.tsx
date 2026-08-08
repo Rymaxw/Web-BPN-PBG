@@ -11,7 +11,7 @@ const Header = ({ onMenuClick }: HeaderProps) => {
             <i className="fa-solid fa-bars text-lg"></i>
           </button>
         )}
-        <div className="relative hidden md:block">
+        <div className="relative">
           <select 
             value={localStorage.getItem('modulAktif') === 'perkara' ? 'Perkara (Pengadilan)' : 'Sengketa (Pengaduan)'}
             onChange={(e) => {

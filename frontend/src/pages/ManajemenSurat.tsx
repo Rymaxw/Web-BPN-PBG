@@ -357,31 +357,8 @@ const ManajemenSurat = () => {
       </div>
     </div>
 
-      {/* Bottom Section: Detail Tahapan Aktif & Informasi Dokumen */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-gray-200/60 rounded-xl border border-gray-300 p-5 space-y-4">
-          <div className="flex justify-between items-center border-b border-gray-300 pb-3">
-            <h3 className="font-bold text-xs text-gray-900 uppercase tracking-wide">DETAIL TAHAPAN AKTIF</h3>
-            <span className="bg-gray-300 text-gray-800 text-[10px] font-bold px-3 py-1 rounded">Durasi: 4 Jam</span>
-          </div>
-
-          <div className="bg-white p-5 rounded-lg border border-gray-300 space-y-3">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-lg bg-indigo-100 text-[#190c4d] font-bold flex items-center justify-center text-sm uppercase">
-                {selectedDoc.author.name.substring(0, 2)}
-              </div>
-              <div>
-                <h4 className="font-bold text-xs text-gray-900">{selectedDoc.author.name}</h4>
-                <p className="text-[11px] text-gray-500">Petugas Penanggung Jawab</p>
-              </div>
-            </div>
-
-            <p className="text-xs text-gray-700 leading-relaxed">
-              {isCompleted ? 'Dokumen ini telah selesai diproses dan disetujui. Kartu Kendali sudah dapat dicetak.' : (selectedDoc.status === 'error' ? 'Terdapat masalah pada dokumen ini. Harap periksa kelengkapan syarat atau hubungi pemohon.' : `Dokumen saat ini sedang dalam proses. Harap segera periksa dan lengkapi tahap yang diperlukan.`)}
-            </p>
-          </div>
-        </div>
-
+      {/* Bottom Section: Informasi Dokumen */}
+      <div className="max-w-3xl mx-auto">
         <div className="bg-gray-200/60 rounded-xl border border-gray-300 p-5 space-y-4 flex flex-col justify-between">
           <div className="space-y-3">
             <h3 className="font-bold text-xs text-gray-900 uppercase tracking-wide border-b border-gray-300 pb-2">INFORMASI DOKUMEN</h3>

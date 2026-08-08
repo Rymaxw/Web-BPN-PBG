@@ -37,7 +37,7 @@ const Sidebar = ({ isOpen = false, onClose }: SidebarProps) => {
       {/* Sidebar Content */}
       <aside className={`
         fixed lg:sticky top-0 left-0 z-50 h-screen w-64 bg-white border-r border-gray-200 
-        flex flex-col justify-between p-5 transition-transform duration-300 ease-in-out shrink-0
+        flex flex-col justify-between p-5 transition-transform duration-300 ease-in-out shrink-0 print:hidden
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
       <div className="space-y-8">
